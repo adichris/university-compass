@@ -1,0 +1,579 @@
+[
+  {
+    "id": "getfund",
+    "name": "GETFund Scholarship",
+    "provider": "Ghana Education Trust Fund",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Ghana",
+      "Abroad"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ghanaian students, mainly need-based; local and some foreign scholarships.",
+    "coverage": "Tuition and/or stipend (varies)",
+    "needBased": true,
+    "deadlineWindow": "Varies - watch official announcements",
+    "deadlineMonth": null,
+    "url": "https://getfund.gov.gh"
+  },
+  {
+    "id": "gss",
+    "name": "Ghana Scholarships Authority",
+    "provider": "Government of Ghana",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Ghana",
+      "Abroad"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ghanaian citizens; local need-based awards and bilateral foreign scholarships.",
+    "coverage": "Fees and allowances (varies)",
+    "needBased": true,
+    "deadlineWindow": "Varies by award",
+    "deadlineMonth": null,
+    "url": "https://scholarships.gov.gh"
+  },
+  {
+    "id": "sltf",
+    "name": "Students Loan Trust Fund",
+    "provider": "Government of Ghana",
+    "kind": "loan",
+    "levels": [
+      "undergraduate",
+      "masters"
+    ],
+    "destinations": [
+      "Ghana"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ghanaian students in accredited tertiary institutions. A loan, not a grant - repayable after study.",
+    "coverage": "Annual loan towards fees and upkeep",
+    "needBased": false,
+    "deadlineWindow": "Opens each academic year",
+    "deadlineMonth": null,
+    "url": "https://sltf.gov.gh"
+  },
+  {
+    "id": "mastercard-ghana",
+    "name": "Mastercard Foundation Scholars Program",
+    "provider": "Mastercard Foundation (via UCC, KNUST, Ashesi and others)",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters"
+    ],
+    "destinations": [
+      "Ghana",
+      "Abroad"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Academically talented young Africans from economically disadvantaged backgrounds with a commitment to giving back.",
+    "coverage": "Full: tuition, accommodation, stipend, laptop, mentorship",
+    "needBased": true,
+    "deadlineWindow": "Usually opens with each partner university's admission cycle",
+    "deadlineMonth": null,
+    "url": "https://mastercardfdn.org/all/scholars/"
+  },
+  {
+    "id": "mtn-bright",
+    "name": "MTN Bright Scholarship",
+    "provider": "MTN Ghana Foundation",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate"
+    ],
+    "destinations": [
+      "Ghana"
+    ],
+    "fields": [
+      "science",
+      "engineering",
+      "health",
+      "business"
+    ],
+    "eligibility": "Ghanaian undergraduates in public tertiary institutions with strong grades and financial need.",
+    "coverage": "Tuition, accommodation and stipend",
+    "needBased": true,
+    "deadlineWindow": "Typically mid-year",
+    "deadlineMonth": 7,
+    "url": "https://www.mtn.com.gh"
+  },
+  {
+    "id": "gnpc",
+    "name": "GNPC Foundation Scholarship",
+    "provider": "Ghana National Petroleum Corporation Foundation",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters"
+    ],
+    "destinations": [
+      "Ghana",
+      "Abroad"
+    ],
+    "fields": [
+      "engineering",
+      "science",
+      "any"
+    ],
+    "eligibility": "Ghanaian students; priority for needy students and oil & gas related fields.",
+    "coverage": "Tuition and allowances (varies)",
+    "needBased": true,
+    "deadlineWindow": "Varies",
+    "deadlineMonth": null,
+    "url": "https://www.gnpcghana.com"
+  },
+  {
+    "id": "ashesi-aid",
+    "name": "Ashesi Financial Aid",
+    "provider": "Ashesi University",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate"
+    ],
+    "destinations": [
+      "Ghana"
+    ],
+    "fields": [
+      "science",
+      "engineering",
+      "business"
+    ],
+    "eligibility": "Admitted Ashesi students who demonstrate financial need.",
+    "coverage": "Partial to full tuition",
+    "needBased": true,
+    "deadlineWindow": "Applied for alongside admission",
+    "deadlineMonth": null,
+    "url": "https://www.ashesi.edu.gh/admissions"
+  },
+  {
+    "id": "chevening",
+    "name": "Chevening Scholarship",
+    "provider": "UK Government (FCDO)",
+    "kind": "scholarship",
+    "levels": [
+      "masters"
+    ],
+    "destinations": [
+      "United Kingdom"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Bachelor's degree, at least 2 years (2,800 hours) of work experience, return to home country for 2 years after.",
+    "coverage": "Full: tuition, living allowance, flights",
+    "needBased": false,
+    "minClass": "second-lower",
+    "workYears": 2,
+    "deadlineWindow": "Usually early November",
+    "deadlineMonth": 11,
+    "url": "https://www.chevening.org"
+  },
+  {
+    "id": "commonwealth-masters",
+    "name": "Commonwealth Master's Scholarship",
+    "provider": "Commonwealth Scholarship Commission (UK)",
+    "kind": "scholarship",
+    "levels": [
+      "masters"
+    ],
+    "destinations": [
+      "United Kingdom"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Citizens of eligible Commonwealth countries (incl. Ghana) with at least an upper second class, unable to self-fund; nominated via national agency.",
+    "coverage": "Full: tuition, stipend, flights",
+    "needBased": true,
+    "minClass": "second-upper",
+    "deadlineWindow": "Usually October (CSC) - national nominator deadlines may be earlier",
+    "deadlineMonth": 10,
+    "url": "https://cscuk.fcdo.gov.uk"
+  },
+  {
+    "id": "commonwealth-phd",
+    "name": "Commonwealth PhD Scholarship",
+    "provider": "Commonwealth Scholarship Commission (UK)",
+    "kind": "scholarship",
+    "levels": [
+      "phd"
+    ],
+    "destinations": [
+      "United Kingdom"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Upper second class first degree (or a relevant master's), development-relevant research proposal.",
+    "coverage": "Full: tuition, stipend, flights",
+    "needBased": true,
+    "minClass": "second-upper",
+    "deadlineWindow": "Usually October",
+    "deadlineMonth": 10,
+    "url": "https://cscuk.fcdo.gov.uk"
+  },
+  {
+    "id": "daad-epos",
+    "name": "DAAD EPOS (Development-Related Postgraduate Courses)",
+    "provider": "DAAD (Germany)",
+    "kind": "scholarship",
+    "levels": [
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Germany"
+    ],
+    "fields": [
+      "engineering",
+      "science",
+      "agriculture",
+      "health",
+      "business",
+      "social-science"
+    ],
+    "eligibility": "Graduates from developing countries with at least 2 years' relevant work experience; degree usually not older than 6 years.",
+    "coverage": "Monthly stipend, insurance, travel; tuition usually waived",
+    "needBased": false,
+    "minClass": "second-upper",
+    "workYears": 2,
+    "deadlineWindow": "Varies per course, often Aug - Oct",
+    "deadlineMonth": 9,
+    "url": "https://www.daad.de"
+  },
+  {
+    "id": "fulbright",
+    "name": "Fulbright Foreign Student Program",
+    "provider": "US Government",
+    "kind": "scholarship",
+    "levels": [
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "United States"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ghanaian graduates with strong academic record and leadership; applications via US Embassy Accra.",
+    "coverage": "Full: tuition, stipend, flights, insurance",
+    "needBased": false,
+    "minClass": "second-upper",
+    "deadlineWindow": "Check US Embassy Ghana page (often Feb - May)",
+    "deadlineMonth": 4,
+    "url": "https://gh.usembassy.gov/education-culture/"
+  },
+  {
+    "id": "erasmus-mundus",
+    "name": "Erasmus Mundus Joint Master's Scholarships",
+    "provider": "European Union",
+    "kind": "scholarship",
+    "levels": [
+      "masters"
+    ],
+    "destinations": [
+      "Europe"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Bachelor's degree; apply directly to each joint master's consortium.",
+    "coverage": "Full: tuition, travel, monthly allowance",
+    "needBased": false,
+    "minClass": "second-upper",
+    "deadlineWindow": "Mostly Oct - Jan",
+    "deadlineMonth": 1,
+    "url": "https://www.eacea.ec.europa.eu/scholarships/erasmus-mundus-catalogue_en"
+  },
+  {
+    "id": "mext",
+    "name": "MEXT Japanese Government Scholarship",
+    "provider": "Government of Japan",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Japan"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Applicants generally under 35 for research students; selection through the Embassy of Japan in Ghana.",
+    "coverage": "Full: tuition, monthly stipend, flights",
+    "needBased": false,
+    "maxAge": 34,
+    "deadlineWindow": "Embassy round usually Apr - May",
+    "deadlineMonth": 5,
+    "url": "https://www.gh.emb-japan.go.jp"
+  },
+  {
+    "id": "csc-china",
+    "name": "Chinese Government Scholarship (CSC)",
+    "provider": "China Scholarship Council",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "China"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Age limits: under 25 (bachelor), under 35 (master), under 40 (PhD).",
+    "coverage": "Full or partial: tuition, accommodation, stipend",
+    "needBased": false,
+    "maxAge": 39,
+    "deadlineWindow": "Usually Jan - Apr",
+    "deadlineMonth": 3,
+    "url": "https://www.campuschina.org"
+  },
+  {
+    "id": "stipendium-hungaricum",
+    "name": "Stipendium Hungaricum",
+    "provider": "Government of Hungary",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Hungary"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ghana is a partner country; nomination through the Ghana Scholarships Authority.",
+    "coverage": "Tuition, monthly stipend, accommodation contribution",
+    "needBased": false,
+    "deadlineWindow": "Usually mid-January",
+    "deadlineMonth": 1,
+    "url": "https://stipendiumhungaricum.hu"
+  },
+  {
+    "id": "turkiye-burslari",
+    "name": "Türkiye Bursları",
+    "provider": "Government of Türkiye",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "Türkiye"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Age limits apply (under 21 UG, 30 masters, 35 PhD); minimum grade thresholds.",
+    "coverage": "Full: tuition, stipend, accommodation, flights, Turkish course",
+    "needBased": false,
+    "maxAge": 34,
+    "deadlineWindow": "Usually Jan - Feb",
+    "deadlineMonth": 2,
+    "url": "https://www.turkiyeburslari.gov.tr"
+  },
+  {
+    "id": "australia-awards",
+    "name": "Australia Awards Africa",
+    "provider": "Australian Government",
+    "kind": "scholarship",
+    "levels": [
+      "masters"
+    ],
+    "destinations": [
+      "Australia"
+    ],
+    "fields": [
+      "agriculture",
+      "science",
+      "engineering",
+      "health",
+      "social-science",
+      "business"
+    ],
+    "eligibility": "Ghanaian professionals working in priority sectors; 2+ years' work experience typically expected.",
+    "coverage": "Full: tuition, living costs, flights",
+    "needBased": false,
+    "workYears": 2,
+    "deadlineWindow": "Check annual round",
+    "deadlineMonth": null,
+    "url": "https://australiaawardsafrica.org"
+  },
+  {
+    "id": "gates-cambridge",
+    "name": "Gates Cambridge Scholarship",
+    "provider": "Gates Cambridge Trust",
+    "kind": "scholarship",
+    "levels": [
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "United Kingdom"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Outstanding academic record, leadership and commitment to improving lives; apply via Cambridge graduate application.",
+    "coverage": "Full cost of study at Cambridge",
+    "needBased": false,
+    "minClass": "first",
+    "deadlineWindow": "Early October to early December (by course)",
+    "deadlineMonth": 12,
+    "url": "https://www.gatescambridge.org"
+  },
+  {
+    "id": "rhodes-west-africa",
+    "name": "Rhodes Scholarship (West Africa)",
+    "provider": "Rhodes Trust",
+    "kind": "scholarship",
+    "levels": [
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "United Kingdom"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Ages roughly 19-25 (older with work), first-class or strong upper second, leadership and character.",
+    "coverage": "Full: Oxford fees, stipend, flights",
+    "needBased": false,
+    "minClass": "first",
+    "maxAge": 27,
+    "deadlineWindow": "Usually August",
+    "deadlineMonth": 8,
+    "url": "https://www.rhodeshouse.ox.ac.uk"
+  },
+  {
+    "id": "jjwbgsp",
+    "name": "Joint Japan/World Bank Graduate Scholarship",
+    "provider": "World Bank & Government of Japan",
+    "kind": "scholarship",
+    "levels": [
+      "masters"
+    ],
+    "destinations": [
+      "Abroad"
+    ],
+    "fields": [
+      "agriculture",
+      "science",
+      "engineering",
+      "health",
+      "business",
+      "social-science",
+      "education"
+    ],
+    "eligibility": "3+ years of development-related work experience after bachelor's; admitted to a listed programme.",
+    "coverage": "Tuition, living stipend, travel",
+    "needBased": false,
+    "workYears": 3,
+    "deadlineWindow": "Usually Feb - May",
+    "deadlineMonth": 5,
+    "url": "https://www.worldbank.org/en/programs/scholarships"
+  },
+  {
+    "id": "holland",
+    "name": "Holland Scholarship",
+    "provider": "Dutch Ministry of Education & universities",
+    "kind": "scholarship",
+    "levels": [
+      "undergraduate",
+      "masters"
+    ],
+    "destinations": [
+      "Netherlands"
+    ],
+    "fields": [
+      "any"
+    ],
+    "eligibility": "Non-EEA students starting a programme at a participating Dutch university.",
+    "coverage": "EUR 5,000 one-off (partial)",
+    "needBased": false,
+    "deadlineWindow": "Usually Feb - May",
+    "deadlineMonth": 5,
+    "url": "https://www.studyinnl.org"
+  },
+  {
+    "id": "eiffel",
+    "name": "Eiffel Excellence Scholarship",
+    "provider": "Campus France",
+    "kind": "scholarship",
+    "levels": [
+      "masters",
+      "phd"
+    ],
+    "destinations": [
+      "France"
+    ],
+    "fields": [
+      "engineering",
+      "science",
+      "business",
+      "law",
+      "social-science"
+    ],
+    "eligibility": "Nominated by a French institution; under 30 for masters, 35 for PhD.",
+    "coverage": "Monthly allowance, travel, insurance",
+    "needBased": false,
+    "maxAge": 29,
+    "deadlineWindow": "Institutions nominate around January",
+    "deadlineMonth": 1,
+    "url": "https://www.campusfrance.org"
+  },
+  {
+    "id": "africa-uni-phd",
+    "name": "African Research Universities & PASET RSIF PhD",
+    "provider": "PASET / African host universities",
+    "kind": "scholarship",
+    "levels": [
+      "phd"
+    ],
+    "destinations": [
+      "Africa"
+    ],
+    "fields": [
+      "science",
+      "engineering",
+      "agriculture",
+      "health"
+    ],
+    "eligibility": "Master's degree in an applied science/technology field; PhD at an African host university with an international sandwich.",
+    "coverage": "Full PhD funding",
+    "needBased": false,
+    "minClass": "second-upper",
+    "deadlineWindow": "Varies by call",
+    "deadlineMonth": null,
+    "url": "https://www.rsif-paset.org"
+  }
+]

@@ -1,0 +1,40 @@
+name: Refresh admission data
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday 06:00 UTC (6am Ghana time)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Restore page fingerprints
+        uses: actions/cache@v4
+        with:
+          path: scraper/state.json
+          key: scraper-state-${{ github.run_id }}
+          restore-keys: scraper-state-
+      - run: python -m uc_scraper crawl
+      - run: python -m uc_scraper apply --min 0.9
+      # Every change lands as a pull request: merging it is the human review step.
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: data/weekly-refresh
+          title: "Data refresh: cut-offs & scholarship deadlines"
+          commit-message: "Refresh admission data from official sources"
+          body: |
+            Automated weekly crawl. Check each changed value against the `source` URL before merging.
+            Low-confidence proposals remain in `data/pending/` for `python -m uc_scraper review`.

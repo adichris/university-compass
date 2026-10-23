@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local database
+*.db
+*.db-journal
+.env*.local
+
+# scraper
+scraper/.cache/
+scraper/state.json
+__pycache__/
+.venv/
+!.env.example

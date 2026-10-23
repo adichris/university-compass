@@ -1,0 +1,62 @@
+# Pages the collector watches. Each source is fetched politely (robots.txt, rate limit, cache),
+# fingerprinted, and only parsed when its content changes. Parsed values become *proposals*
+# in data/pending/ that a human reviews before they touch data/*.json.
+#
+# kind:
+#   cutoffs      - a page or PDF listing programmes with aggregates (needs `university`)
+#   scholarship  - a scholarship page; we extract deadline dates (needs `scholarship` id)
+#   watch        - just alert when the page changes (e.g. WAEC news, admission notices)
+
+user_agent: "UniCheckerBot/1.0 (+https://unichecker.gh/about; free student admission guide)"
+delay_seconds: 5
+
+sources:
+  # --- Cut-off points / admission requirements (URLs change yearly: update each cycle) ---
+  - id: ug-admissions
+    kind: cutoffs
+    university: ug
+    url: https://www.ug.edu.gh/admissions
+    follow_pdfs: true          # also parse PDFs linked from the page whose link text mentions cut-off/requirement
+  - id: knust-admissions
+    kind: cutoffs
+    university: knust
+    url: https://www.knust.edu.gh/admissions
+    follow_pdfs: true
+  - id: ucc-admissions
+    kind: cutoffs
+    university: ucc
+    url: https://www.ucc.edu.gh/admissions
+    follow_pdfs: true
+  - id: uew-admissions
+    kind: cutoffs
+    university: uew
+    url: https://www.uew.edu.gh/admissions
+    follow_pdfs: true
+
+  # --- Scholarships ---
+  - id: chevening
+    kind: scholarship
+    scholarship: chevening
+    url: https://www.chevening.org/scholarships/
+  - id: commonwealth
+    kind: scholarship
+    scholarship: commonwealth-masters
+    url: https://cscuk.fcdo.gov.uk/scholarships/
+  - id: daad
+    kind: scholarship
+    scholarship: daad-epos
+    url: https://www.daad.de/en/
+  - id: gsa
+    kind: scholarship
+    scholarship: gss
+    url: https://scholarships.gov.gh
+
+  # --- Watch-only ---
+  - id: waec-news
+    kind: watch
+    url: https://www.waecgh.org
+    note: Results release announcements
+  - id: gtec-accredited
+    kind: watch
+    url: https://gtec.edu.gh
+    note: Accredited institutions list

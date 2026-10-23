@@ -1,69 +1,101 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, Award, BookOpenCheck, Building2, ClipboardCheck, FileSearch, GraduationCap, Sparkles } from "lucide-react";
+import { postgradProgrammes, programmes, scholarships, universities, updates } from "@/lib/data";
+
+const FEATURES = [
+  { href: "/check", icon: ClipboardCheck, title: "Admission checker", body: "WASSCE, NOVDEC & SSSCE grades → every programme you qualify for, sorted by your chances." },
+  { href: "/results", icon: FileSearch, title: "WASSCE result check", body: "Step-by-step result checking, then import your grades from the result slip in one tap." },
+  { href: "/postgraduate", icon: GraduationCap, title: "Masters & PhD", body: "Match your degree class, field and experience to postgraduate programmes in Ghana and abroad." },
+  { href: "/scholarships", icon: Award, title: "Scholarships", body: "Local and international scholarships matched to your profile, with deadline reminders." },
+  { href: "/universities", icon: Building2, title: "Universities", body: "Profiles, programmes, fees ranges, sitting rules and official admission links." },
+  { href: "/career", icon: Sparkles, title: "Career quiz", body: "Not sure what to study? Find fields that fit your interests in 2 minutes." },
+];
 
 export default function Home() {
+  const results = updates.filter((u) => u.kind === "results");
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <div className="space-y-16">
+      <section className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 text-white sm:px-12 dark:bg-brand-soft">
+        <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/25 blur-3xl" aria-hidden />
+        <div className="relative max-w-2xl">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
+            <BookOpenCheck size={14} /> 100% free · No account needed
+          </p>
+          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            Check your university admission chances in Ghana
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-4 text-lg text-white/85 dark:text-foreground/80">
+            Enter your WASSCE or NOVDEC grades and instantly see which universities and programmes you qualify for.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/check" className="btn bg-accent px-6 py-3 text-base text-[#1d1600] hover:brightness-95">
+              Check my chances <ArrowRight size={18} />
+            </Link>
+            <Link href="/results" className="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10 dark:text-foreground">
+              Check WASSCE results
+            </Link>
+          </div>
+          <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 text-sm">
+            {[
+              [universities.length, "institutions"],
+              [programmes.length, "programmes"],
+              [scholarships.length + postgradProgrammes.length, "PG & scholarships"],
+            ].map(([n, l]) => (
+              <div key={l}>
+                <dt className="text-3xl font-bold">{n}</dt>
+                <dd className="text-white/75 dark:text-muted">{l}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-6 text-2xl font-bold tracking-tight">Everything you need for admission</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map(({ href, icon: Icon, title, body }) => (
+            <Link key={href} href={href} className="card group transition hover:-translate-y-0.5 hover:border-brand">
+              <Icon className="mb-3 text-brand" size={26} />
+              <h3 className="font-semibold group-hover:text-brand">{title}</h3>
+              <p className="mt-1 text-sm text-muted">{body}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-2">
+        <div className="card">
+          <h2 className="mb-3 text-lg font-semibold">Results & admissions watch</h2>
+          <ul className="space-y-3">
+            {updates.map((u) => (
+              <li key={u.id} className="flex items-start justify-between gap-3 text-sm">
+                <div>
+                  <p className="font-medium">{u.title}</p>
+                  <p className="text-muted">{u.window}</p>
+                </div>
+                <span className={`chip shrink-0 ${u.status === "released" || u.status === "open" ? "chip-active" : ""}`}>{u.status}</span>
+              </li>
+            ))}
+          </ul>
+          {results.length > 0 && (
+            <Link href="/results#alerts" className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+              Get notified when results are out <ArrowRight size={14} />
+            </Link>
+          )}
+        </div>
+        <div className="card">
+          <h2 className="mb-3 text-lg font-semibold">How aggregates work</h2>
+          <p className="text-sm text-muted">
+            Your aggregate adds the grade points (A1 = 1 … C6 = 6) of English, Core Maths, the better of Integrated Science or Social
+            Studies, and your best three relevant electives. Lower is better: 6 is perfect, and most degree programmes need 24 or
+            better with credits in all six subjects.
+          </p>
+          <p className="mt-3 text-sm text-muted">
+            Each programme can insist on particular electives (e.g. Chemistry and Biology for Medicine), so your aggregate can differ
+            from programme to programme. Our checker handles that for you.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }

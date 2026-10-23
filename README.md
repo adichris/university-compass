@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# UniChecker.gh
 
-## Getting Started
+A free admission guide for Ghanaian students. Enter WASSCE, NOVDEC or SSSCE grades and see every university
+programme you qualify for, sorted into **Safe / Competitive / Reach**. It also covers masters/PhD matching,
+scholarships, WASSCE result checking and an application tracker.
 
-First, run the development server:
+Every feature works **without an account**: data is saved in the browser. An optional account syncs it across devices.
+
+## Features
+
+| Area | What it does |
+| --- | --- |
+| Admission checker (`/check`) | Programme-specific aggregates (core rule + required electives + minimum grades), cut-off comparison, multiple sittings combined where the university allows it, filters, shortlist, share card |
+| WASSCE results (`/results`) | Guided check on the official WAEC portal (copy-ready details, PIN never stored), import grades by **pasting the results text** or **scanning the slip** (on-device OCR), release tracker, email alerts |
+| Masters & PhD (`/postgraduate`) | Matches degree class / CGPA, field, work experience, proposal and IELTS against programmes in Ghana and abroad, plus matching funding |
+| Scholarships (`/scholarships`) | Profile-based match score, filters, save, add to plan, `.ics` deadline reminders |
+| Universities (`/universities`) | Profiles, programmes and cut-offs, fees ranges, sitting rules, official links |
+| My plan (`/plan`) | Application tracker (status, deadline, notes, CSV export), saved items, side-by-side compare |
+| Career quiz (`/career`) | Interest quiz that links into the checker filtered by field |
+| Outcomes (`/contribute`) | Anonymous "admitted with aggregate X" reports, shown as real-world ranges on results |
+| PWA | Installable, works offline for previously visited pages |
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm test           # grading engine + parser tests
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The local database is a SQLite file (`unichecker.db`) that is created automatically.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy for free
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a free [Turso](https://turso.tech) database and copy its URL and token.
+2. Import the repo on [Vercel](https://vercel.com) (Hobby plan) and set:
+   - `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
+   - `NEXT_PUBLIC_SITE_URL` (e.g. `https://unichecker.gh`)
+3. The weekly data refresh runs on GitHub Actions (free for public repos).
 
-## Learn More
+## Data
 
-To learn more about Next.js, take a look at the following resources:
+All data is in `data/*.json`, which the app loads at build time:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `universities.json`: institutions and sitting rules
+- `programme-templates.json`: entry requirements per programme type
+- `offerings.json`: which university offers what, with the latest cut-off
+- `postgrad.json`, `scholarships.json`, `updates.json`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> ⚠️ The seeded cut-off points are **estimates** (`verified: false`). Replace them with official figures before
+> launch, either by hand or through the scraper below. The UI labels unverified figures as estimates.
 
-## Deploy on Vercel
+### Scraper (keeps data current)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+cd scraper
+python -m venv .venv && .venv/Scripts/pip install -r requirements.txt   # macOS/Linux: .venv/bin/pip
+python -m uc_scraper crawl      # fetch changed pages/PDFs listed in sources.yaml -> data/pending/
+python -m uc_scraper review     # approve / edit / reject each proposal
+python -m pytest tests
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The scraper respects `robots.txt`, rate-limits requests per host, caches pages and only parses pages whose content
+changed. It never writes straight to live data: proposals go through `review`, or in CI through a pull request
+(`.github/workflows/scrape.yml`). Source URLs change each admission cycle, so update `scraper/sources.yaml` every year.
+
+## WASSCE results: what is and isn't automated
+
+WAEC has no public results API, and its portal uses a security check. The app does **not** log into WAEC on the
+student's behalf. Instead it prepares their details for copying, opens the official portal, and reads their grades
+back in. If you later become a WAEC partner with API access, add it as a server route that calls that API.
+
+## Privacy
+
+Guests: everything stays in `localStorage`. Accounts: scrypt-hashed passwords, hashed session tokens, httpOnly
+cookies. Outcome reports are anonymous. Register with Ghana's Data Protection Commission (Act 843) before launch.

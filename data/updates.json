@@ -1,0 +1,5 @@
+[
+  { "id": "wassce-school-2026", "kind": "results", "title": "WASSCE for School Candidates 2026 results", "status": "expected", "window": "Usually released by WAEC in August - October", "url": "https://www.waecgh.org", "note": "WAEC announces release on its official channels. We'll update this when it happens." },
+  { "id": "wassce-private-2025", "kind": "results", "title": "WASSCE for Private Candidates (NOVDEC) 2025 results", "status": "released", "window": "Released early 2026", "url": "https://www.waecgh.org" },
+  { "id": "admissions-2026", "kind": "admissions", "title": "2026/27 university admission forms", "status": "open", "window": "Most public universities sell forms between March and July; late applications vary by school", "url": "/universities" }
+]

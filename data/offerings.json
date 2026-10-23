@@ -1,0 +1,61 @@
+{
+  "_comment": "Programme offerings per university. Value = indicative last cut-off aggregate (lower is better), or an object with overrides { cutoff, history, name, modes, source, verified, lastChecked }. Seed figures are ESTIMATES and unverified - the scraper + review flow replaces them with sourced numbers.",
+  "ug": {
+    "medicine": 6, "dentistry": 7, "pharmacy": 8, "nursing": 11, "midwifery": 13, "physician-assistant": 12, "medical-lab": 10, "physiotherapy": 10, "public-health": 15,
+    "computer-engineering": 10, "civil-engineering": 12, "computer-science": 12, "information-technology": 16, "actuarial-science": 10, "mathematics": 16, "statistics": 16, "biochemistry": 12, "physical-science": 18, "agriculture": 20,
+    "business-admin": 12, "accounting": 12, "banking-finance": 13, "economics": 12,
+    "law": 9, "political-science": 12, "psychology": 12, "sociology": 15, "geography": 16, "communication": 11, "english": 14, "history": 18, "french": 18, "religion": 20
+  },
+  "knust": {
+    "medicine": 6, "dentistry": 7, "pharmacy": 7, "nursing": 11, "midwifery": 13, "medical-lab": 10, "physiotherapy": 10,
+    "computer-engineering": 8, "electrical-engineering": 8, "civil-engineering": 10, "mechanical-engineering": 10, "petroleum-engineering": 7, "geomatic-engineering": 14, "architecture": 10,
+    "computer-science": 10, "information-technology": 14, "actuarial-science": 9, "mathematics": 16, "statistics": 16, "biochemistry": 11, "physical-science": 18, "environmental-science": 18, "agriculture": 20, "natural-resources": 20,
+    "business-admin": 12, "accounting": 12, "banking-finance": 12, "economics": 12, "hospitality": 16,
+    "law": 9, "political-science": 14, "sociology": 16, "communication": 13, "english": 16, "history": 20, "french": 20, "religion": 20,
+    "fine-art": 14, "fashion": 16, "bed-tvet": 20
+  },
+  "ucc": {
+    "medicine": 7, "nursing": 12, "physician-assistant": 13, "medical-lab": 11, "public-health": 16,
+    "computer-science": 14, "information-technology": 16, "actuarial-science": 12, "mathematics": 18, "statistics": 18, "biochemistry": 14, "physical-science": 20, "environmental-science": 20, "agriculture": 22, "natural-resources": 22,
+    "business-admin": 14, "accounting": 13, "banking-finance": 14, "economics": 14, "procurement": 16, "hospitality": 18,
+    "law": 10, "political-science": 16, "psychology": 15, "sociology": 18, "geography": 18, "communication": 14, "english": 16, "history": 20, "french": 20, "religion": 22,
+    "bed-basic": 18, "bed-science": 18, "bed-maths": 18
+  },
+  "uew": {
+    "computer-science": 18, "information-technology": 18, "mathematics": 20, "biochemistry": 20, "physical-science": 22,
+    "business-admin": 18, "accounting": 18, "economics": 18,
+    "communication": 16, "english": 18, "history": 22, "french": 22, "religion": 22, "political-science": 20, "psychology": 18, "geography": 20,
+    "bed-basic": 20, "bed-science": 20, "bed-maths": 20, "fine-art": 20, "fashion": 20, "diploma-education": 30
+  },
+  "uds": {
+    "medicine": 7, "nursing": 13, "midwifery": 14, "public-health": 18, "medical-lab": 13,
+    "computer-science": 18, "information-technology": 20, "mathematics": 20, "statistics": 20, "biochemistry": 18, "environmental-science": 22, "agriculture": 22, "natural-resources": 22,
+    "business-admin": 18, "accounting": 18, "economics": 18, "sociology": 20, "geography": 20, "political-science": 20, "law": 12
+  },
+  "uhas": { "medicine": 7, "pharmacy": 8, "nursing": 12, "midwifery": 13, "physician-assistant": 13, "medical-lab": 11, "physiotherapy": 11, "public-health": 18, "biochemistry": 16 },
+  "umat": { "mining-engineering": 10, "petroleum-engineering": 8, "geomatic-engineering": 14, "electrical-engineering": 12, "mechanical-engineering": 12, "computer-science": 14, "mathematics": 18, "environmental-science": 18, "statistics": 18 },
+  "uenr": { "petroleum-engineering": 12, "electrical-engineering": 14, "civil-engineering": 15, "mechanical-engineering": 15, "computer-science": 16, "information-technology": 18, "environmental-science": 20, "natural-resources": 22, "agriculture": 22, "nursing": 14, "business-admin": 18 },
+  "aamusted": { "bed-tvet": 22, "information-technology": 20, "business-admin": 20, "accounting": 20, "fashion": 20, "hospitality": 20, "bed-basic": 22, "diploma-education": 32 },
+  "upsa": { "accounting": 13, "banking-finance": 14, "business-admin": 15, "procurement": 16, "hospitality": 18, "information-technology": 18, "law": 11, "communication": 16 },
+  "gimpa": { "business-admin": 14, "accounting": 14, "economics": 14, "law": 10, "information-technology": 16, "political-science": 16 },
+  "cktutas": { "mathematics": 20, "statistics": 20, "computer-science": 20, "information-technology": 20, "environmental-science": 22, "economics": 20, "business-admin": 20 },
+  "ubids": { "business-admin": 20, "accounting": 20, "banking-finance": 20, "economics": 20, "procurement": 20, "sociology": 22, "geography": 22, "political-science": 22 },
+  "ashesi": {
+    "computer-science": { "cutoff": 10, "note": "Holistic admission - essays, interview and maths readiness count alongside grades." },
+    "information-technology": { "cutoff": 12, "name": "BSc Management Information Systems", "note": "Holistic admission." },
+    "business-admin": { "cutoff": 12, "note": "Holistic admission." },
+    "computer-engineering": { "cutoff": 10, "note": "Holistic admission." },
+    "electrical-engineering": { "cutoff": 10, "note": "Holistic admission." },
+    "mechanical-engineering": { "cutoff": 10, "note": "Holistic admission." },
+    "economics": { "cutoff": 12, "note": "Holistic admission." },
+    "law": { "cutoff": 12, "name": "Law with Public Policy", "note": "Holistic admission." }
+  },
+  "central": { "pharmacy": 12, "nursing": 16, "physician-assistant": 16, "architecture": 16, "law": 14, "business-admin": 22, "accounting": 22, "banking-finance": 22, "economics": 22, "computer-science": 22, "information-technology": 22, "communication": 22, "religion": 24 },
+  "vvu": { "nursing": 16, "business-admin": 22, "accounting": 22, "computer-science": 22, "information-technology": 22, "bed-basic": 24, "communication": 24 },
+  "acity": { "computer-science": 18, "information-technology": 20, "computer-engineering": 18, "electrical-engineering": 18, "mechanical-engineering": 18, "civil-engineering": 18, "business-admin": 22, "accounting": 22, "law": 16 },
+  "atu": { "hnd-engineering": 30, "hnd-business": 32, "hnd-hospitality": 32, "hnd-fashion": 32, "hnd-science-lab": 30, "electrical-engineering": 20, "civil-engineering": 20, "mechanical-engineering": 20, "information-technology": 22, "accounting": 22, "procurement": 22 },
+  "kstu": { "hnd-engineering": 30, "hnd-business": 32, "hnd-hospitality": 32, "hnd-fashion": 32, "hnd-science-lab": 30, "electrical-engineering": 20, "civil-engineering": 20, "information-technology": 22, "accounting": 22, "medical-lab": 18 },
+  "ttu": { "hnd-engineering": 30, "hnd-business": 32, "hnd-hospitality": 32, "hnd-fashion": 32, "hnd-science-lab": 30, "petroleum-engineering": 18, "electrical-engineering": 20, "mechanical-engineering": 20, "accounting": 22 },
+  "htu": { "hnd-engineering": 30, "hnd-business": 32, "hnd-hospitality": 32, "hnd-fashion": 32, "hnd-science-lab": 30, "electrical-engineering": 20, "information-technology": 22, "accounting": 22 },
+  "cctu": { "hnd-engineering": 30, "hnd-business": 32, "hnd-hospitality": 32, "hnd-fashion": 32, "hnd-science-lab": 30, "information-technology": 22, "accounting": 22, "procurement": 22 }
+}

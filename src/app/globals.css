@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --background: #f7f8f5;
+  --surface: #ffffff;
+  --surface-2: #f0f2ec;
+  --foreground: #14201a;
+  --muted: #5b6b62;
+  --border: #dfe4dc;
+  --brand: #0b6b3f;
+  --brand-strong: #08542f;
+  --brand-soft: #e3f1e8;
+  --accent: #e9b30f;
+  --danger: #b42318;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --safe: #0b7a43;
+  --safe-bg: #e2f4e9;
+  --competitive: #1d5fb8;
+  --competitive-bg: #e4edfa;
+  --reach: #a15c00;
+  --reach-bg: #fbefd9;
+  --unlikely: #8a3b12;
+  --unlikely-bg: #f9e4da;
+  --ineligible: #6b7280;
+  --ineligible-bg: #eef0f2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0e1411;
+    --surface: #151d18;
+    --surface-2: #1c2620;
+    --foreground: #e7eee9;
+    --muted: #9aaba1;
+    --border: #2a362f;
+    --brand: #3fbf7f;
+    --brand-strong: #63d398;
+    --brand-soft: #173325;
+    --accent: #f2c94c;
+    --danger: #f97066;
+
+    --safe: #58d091;
+    --safe-bg: #163323;
+    --competitive: #7fb0ff;
+    --competitive-bg: #172a45;
+    --reach: #f5b44f;
+    --reach-bg: #3a2a10;
+    --unlikely: #f29a73;
+    --unlikely-bg: #3a2016;
+    --ineligible: #9ca3af;
+    --ineligible-bg: #23292c;
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@utility card {
+  @apply rounded-2xl border border-border bg-surface p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)];
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-strong dark:text-[#06140c];
+}
+@utility btn-ghost {
+  @apply btn border border-border bg-surface text-foreground hover:bg-surface-2;
+}
+@utility input {
+  @apply w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand/20;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-foreground;
+}
+@utility chip {
+  @apply inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted;
+}
+@utility chip-active {
+  @apply border-brand bg-brand-soft text-brand;
 }

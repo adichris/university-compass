@@ -1,0 +1,63 @@
+{
+  "core": ["English Language", "Core Mathematics", "Integrated Science", "Social Studies"],
+  "tracks": {
+    "General Science": ["Physics", "Chemistry", "Biology", "Elective Mathematics", "Geography", "Elective ICT"],
+    "General Arts": [
+      "Literature in English", "History", "Government", "Economics", "Geography",
+      "Christian Religious Studies", "Islamic Religious Studies", "French", "Ghanaian Language",
+      "Elective Mathematics", "Music", "Elective ICT"
+    ],
+    "Business": ["Business Management", "Financial Accounting", "Cost Accounting", "Economics", "Elective Mathematics", "Elective ICT"],
+    "Visual Arts": ["General Knowledge in Art", "Graphic Design", "Picture Making", "Sculpture", "Textiles", "Ceramics", "Leatherwork", "Economics"],
+    "Home Economics": ["Management in Living", "Food and Nutrition", "Clothing and Textiles", "Biology", "Chemistry", "Economics", "General Knowledge in Art"],
+    "Agriculture": ["General Agriculture", "Animal Husbandry", "Crop Husbandry", "Chemistry", "Physics", "Biology", "Elective Mathematics"],
+    "Technical": [
+      "Technical Drawing", "Building Construction", "Woodwork", "Metalwork", "Applied Electricity",
+      "Electronics", "Auto Mechanics", "Physics", "Elective Mathematics"
+    ]
+  },
+  "aliases": {
+    "ENGLISH LANG": "English Language",
+    "ENGLISH": "English Language",
+    "MATHEMATICS(CORE)": "Core Mathematics",
+    "MATHEMATICS (CORE)": "Core Mathematics",
+    "CORE MATHS": "Core Mathematics",
+    "CORE MATHEMATICS": "Core Mathematics",
+    "MATHEMATICS": "Core Mathematics",
+    "INTEGRATED SCIENCE": "Integrated Science",
+    "INTEG SCIENCE": "Integrated Science",
+    "SOCIAL STUDIES": "Social Studies",
+    "MATHEMATICS(ELECT)": "Elective Mathematics",
+    "MATHEMATICS (ELECT)": "Elective Mathematics",
+    "MATHEMATICS(ELECTIVE)": "Elective Mathematics",
+    "ELECTIVE MATHEMATICS": "Elective Mathematics",
+    "FURTHER MATHEMATICS": "Elective Mathematics",
+    "LIT-IN-ENGLISH": "Literature in English",
+    "LITERATURE IN ENGLISH": "Literature in English",
+    "CHRISTIAN REL STUDIES": "Christian Religious Studies",
+    "CHRISTIAN RELIGIOUS STUDIES": "Christian Religious Studies",
+    "ISLAMIC REL STUDIES": "Islamic Religious Studies",
+    "ISLAMIC RELIGIOUS STUDIES": "Islamic Religious Studies",
+    "GEN KNOWLEDGE IN ART": "General Knowledge in Art",
+    "GENERAL KNOWLEDGE IN ART": "General Knowledge in Art",
+    "INFORMATION AND COMMUNICATION TECHNOLOGY": "Elective ICT",
+    "ICT (ELECTIVE)": "Elective ICT",
+    "ELECTIVE ICT": "Elective ICT",
+    "GENERAL AGRICULTURE": "General Agriculture",
+    "ANIMAL HUSBANDRY": "Animal Husbandry",
+    "CROP HUSBANDRY": "Crop Husbandry",
+    "BUSINESS MANAGEMENT": "Business Management",
+    "FINANCIAL ACCOUNTING": "Financial Accounting",
+    "PRINCIPLES OF COST ACCOUNTING": "Cost Accounting",
+    "COST ACCOUNTING": "Cost Accounting",
+    "MANAGEMENT IN LIVING": "Management in Living",
+    "FOOD AND NUTRITION": "Food and Nutrition",
+    "CLOTHING AND TEXTILES": "Clothing and Textiles",
+    "TECHNICAL DRAWING": "Technical Drawing",
+    "BUILDING CONSTRUCTION": "Building Construction",
+    "APPLIED ELECTRICITY": "Applied Electricity",
+    "AUTO MECHANICS": "Auto Mechanics",
+    "GRAPHIC DESIGN": "Graphic Design",
+    "PICTURE MAKING": "Picture Making"
+  }
+}
