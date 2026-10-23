@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui";
+import { SITE_TITLE } from "@/lib/site";
 
 export const metadata: Metadata = { title: "About & data sources" };
 
 export default function AboutPage() {
   return (
     <div className="max-w-3xl">
-      <PageHeader title="About UniChecker.gh" subtitle="A free admission guide for Ghanaian students. No paywalls, and no account required." />
+      <PageHeader title={`About ${SITE_TITLE}`} subtitle="A free admission guide for Ghanaian students. No paywalls, and no account required." />
       <div className="space-y-6 leading-relaxed">
         <section className="card space-y-2">
           <h2 className="text-lg font-semibold">How we calculate your chances</h2>

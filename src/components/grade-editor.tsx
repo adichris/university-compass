@@ -30,7 +30,7 @@ export function GradeEditor({ sitting, onChange }: { sitting: Sitting; onChange:
   const applyTrack = (track: string) => {
     const core = Object.fromEntries(subjects.core.map((s) => [s, sitting.grades[s] ?? ""]));
     const picks = subjects.tracks[track].slice(0, 4);
-    onChange({ ...sitting, grades: { ...core, ...Object.fromEntries(picks.map((s) => [s, sitting.grades[s] ?? ""])) } });
+    onChange({ ...sitting, track, grades: { ...core, ...Object.fromEntries(picks.map((s) => [s, sitting.grades[s] ?? ""])) } });
   };
   const unused = allElectives.filter((s) => !(s in sitting.grades));
 
@@ -62,7 +62,7 @@ export function GradeEditor({ sitting, onChange }: { sitting: Sitting; onChange:
         <p className="label">Quick start: your SHS programme</p>
         <div className="flex flex-wrap gap-2">
           {Object.keys(subjects.tracks).map((t) => (
-            <button key={t} type="button" className="chip hover:border-brand hover:text-brand" onClick={() => applyTrack(t)}>
+            <button key={t} type="button" aria-pressed={sitting.track === t} className={`chip !py-1.5 ${sitting.track === t ? "chip-active" : ""}`} onClick={() => applyTrack(t)}>
               {t}
             </button>
           ))}
@@ -82,7 +82,7 @@ export function GradeEditor({ sitting, onChange }: { sitting: Sitting; onChange:
         <legend className="label">Elective subjects</legend>
         <div className="grid gap-2">
           {electives.map((s) => (
-            <div key={s} className="flex items-center gap-2 rounded-xl border border-border bg-surface-2/60 p-2">
+            <div key={s} className={`flex items-center gap-2 rounded-xl border p-2 transition ${sitting.grades[s] ? "border-brand/40 bg-brand-soft/50" : "border-border bg-surface-2/60"}`}>
               <select className="input min-w-0 flex-1 !py-2" value={s} aria-label="Elective subject" onChange={(e) => renameElective(s, e.target.value)}>
                 <option value={s}>{s}</option>
                 {unused.map((u) => <option key={u} value={u}>{u}</option>)}
@@ -106,7 +106,7 @@ export function GradeEditor({ sitting, onChange }: { sitting: Sitting; onChange:
 
 function GradeRow({ subject, grade, scale, onGrade }: { subject: string; grade: string; scale: readonly string[]; onGrade: (g: string) => void }) {
   return (
-    <div className="flex items-center justify-between gap-2 rounded-xl border border-border bg-surface-2/60 p-2 pl-3">
+    <div className={`flex items-center justify-between gap-2 rounded-xl border p-2 pl-3 transition ${grade ? "border-brand/40 bg-brand-soft/50" : "border-border bg-surface-2/60"}`}>
       <span className="text-sm font-medium">{subject}</span>
       <GradeSelect grade={grade} scale={scale} label={`${subject} grade`} onGrade={onGrade} />
     </div>
@@ -117,7 +117,7 @@ function GradeSelect({ grade, scale, label, onGrade }: { grade: string; scale: r
   return (
     <select
       aria-label={label}
-      className={`input w-20 shrink-0 !py-2 text-center font-mono font-semibold ${grade ? "" : "text-muted"}`}
+      className={`input w-20 shrink-0 !py-2 text-center font-mono font-semibold ${grade ? "input-active" : "text-muted"}`}
       value={grade}
       onChange={(e) => onGrade(e.target.value)}
     >

@@ -1,54 +1,61 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f8f5;
+  --background: #f5f6fb;
   --surface: #ffffff;
-  --surface-2: #f0f2ec;
-  --foreground: #14201a;
-  --muted: #5b6b62;
-  --border: #dfe4dc;
-  --brand: #0b6b3f;
-  --brand-strong: #08542f;
-  --brand-soft: #e3f1e8;
-  --accent: #e9b30f;
-  --danger: #b42318;
+  --surface-2: #eef0f8;
+  --foreground: #161a33;
+  --muted: #5d6385;
+  --border: #dde0ee;
+  --brand: #3f3dbc;
+  --brand-strong: #2f2d9a;
+  --brand-soft: #e9e8fb;
+  --accent: #f2a516;
+  --accent-soft: #fdf1d8;
+  --danger: #c0262d;
+
+  /* Ghana flag stripe */
+  --gh-red: #ce1126;
+  --gh-gold: #fcd116;
+  --gh-green: #006b3f;
 
   --safe: #0b7a43;
   --safe-bg: #e2f4e9;
-  --competitive: #1d5fb8;
-  --competitive-bg: #e4edfa;
+  --competitive: #3f3dbc;
+  --competitive-bg: #e9e8fb;
   --reach: #a15c00;
   --reach-bg: #fbefd9;
-  --unlikely: #8a3b12;
-  --unlikely-bg: #f9e4da;
-  --ineligible: #6b7280;
-  --ineligible-bg: #eef0f2;
+  --unlikely: #a3361a;
+  --unlikely-bg: #fae4dc;
+  --ineligible: #6b7080;
+  --ineligible-bg: #eceef3;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0e1411;
-    --surface: #151d18;
-    --surface-2: #1c2620;
-    --foreground: #e7eee9;
-    --muted: #9aaba1;
-    --border: #2a362f;
-    --brand: #3fbf7f;
-    --brand-strong: #63d398;
-    --brand-soft: #173325;
-    --accent: #f2c94c;
-    --danger: #f97066;
+    --background: #0d0f1c;
+    --surface: #151829;
+    --surface-2: #1d2136;
+    --foreground: #e8e9f5;
+    --muted: #9da2c2;
+    --border: #2a2f4a;
+    --brand: #8f8cff;
+    --brand-strong: #aeacff;
+    --brand-soft: #23244a;
+    --accent: #f7bd47;
+    --accent-soft: #3a2c10;
+    --danger: #ff7b7b;
 
     --safe: #58d091;
-    --safe-bg: #163323;
-    --competitive: #7fb0ff;
-    --competitive-bg: #172a45;
+    --safe-bg: #15301f;
+    --competitive: #a5a3ff;
+    --competitive-bg: #24254a;
     --reach: #f5b44f;
     --reach-bg: #3a2a10;
     --unlikely: #f29a73;
     --unlikely-bg: #3a2016;
     --ineligible: #9ca3af;
-    --ineligible-bg: #23292c;
+    --ineligible-bg: #22263a;
   }
 }
 
@@ -63,6 +70,7 @@
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
   --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-danger: var(--danger);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -73,27 +81,50 @@ body {
   color: var(--foreground);
 }
 
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+}
+
 @utility card {
-  @apply rounded-2xl border border-border bg-surface p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)];
+  @apply rounded-2xl border border-border bg-surface p-5 shadow-[0_1px_3px_rgba(22,26,51,0.06)];
 }
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
 }
 @utility btn-primary {
-  @apply btn bg-brand text-white hover:bg-brand-strong dark:text-[#06140c];
+  @apply btn bg-brand text-white shadow-sm hover:bg-brand-strong dark:text-[#0d0f1c];
 }
 @utility btn-ghost {
-  @apply btn border border-border bg-surface text-foreground hover:bg-surface-2;
+  @apply btn border border-border bg-surface text-foreground hover:border-brand/40 hover:bg-surface-2;
 }
 @utility input {
-  @apply w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand/20;
+  @apply w-full rounded-xl border border-border bg-surface px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-muted hover:border-brand/40 focus:border-brand focus:ring-2 focus:ring-brand/25;
+}
+/* A select/input whose value has been chosen (not the default) */
+@utility input-active {
+  @apply border-brand bg-brand-soft font-semibold text-brand;
 }
 @utility label {
   @apply mb-1.5 block text-sm font-medium text-foreground;
 }
 @utility chip {
-  @apply inline-flex items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted;
+  @apply inline-flex cursor-pointer items-center gap-1 rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-muted transition select-none hover:border-brand/50 hover:text-foreground active:scale-95;
 }
 @utility chip-active {
-  @apply border-brand bg-brand-soft text-brand;
+  @apply border-brand bg-brand text-white shadow-sm hover:text-white dark:text-[#0d0f1c];
+}
+@utility toggle-option {
+  @apply cursor-pointer rounded-xl border border-border bg-surface px-3 py-2.5 text-left text-sm transition hover:border-brand/50 active:scale-[0.98];
+}
+@utility toggle-option-active {
+  @apply border-brand bg-brand-soft font-semibold text-brand ring-2 ring-brand/20;
+}
+@utility gh-stripe {
+  background: linear-gradient(90deg, var(--gh-red) 0 33.33%, var(--gh-gold) 33.33% 66.66%, var(--gh-green) 66.66% 100%);
 }

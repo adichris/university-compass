@@ -38,22 +38,22 @@ export function ScholarshipsClient() {
   return (
     <div className="space-y-4">
       <div className="card grid gap-3 !p-4 sm:grid-cols-2 lg:grid-cols-4">
-        <input className="input sm:col-span-2 lg:col-span-4" placeholder="Search scholarships, providers or countries" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search scholarships" />
-        <select className="input" aria-label="Level" value={profile.level} onChange={(e) => set("level", e.target.value as ScholarshipProfile["level"])}>
+        <input className={`input sm:col-span-2 lg:col-span-4 ${q ? "input-active" : ""}`} placeholder="Search scholarships, providers or countries" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search scholarships" />
+        <select className={`input ${profile.level !== "any" ? "input-active" : ""}`} aria-label="Level" value={profile.level} onChange={(e) => set("level", e.target.value as ScholarshipProfile["level"])}>
           <option value="any">Any level</option>
           <option value="undergraduate">Undergraduate</option>
           <option value="masters">Master&apos;s</option>
           <option value="phd">PhD</option>
         </select>
-        <select className="input" aria-label="Field" value={profile.field} onChange={(e) => set("field", e.target.value as Field | "any")}>
+        <select className={`input ${profile.field !== "any" ? "input-active" : ""}`} aria-label="Field" value={profile.field} onChange={(e) => set("field", e.target.value as Field | "any")}>
           <option value="any">Any field</option>
           {(Object.keys(FIELD_LABELS) as Field[]).map((f) => <option key={f} value={f}>{FIELD_LABELS[f]}</option>)}
         </select>
-        <select className="input" aria-label="Destination" value={profile.destination} onChange={(e) => set("destination", e.target.value)}>
+        <select className={`input ${profile.destination !== "any" ? "input-active" : ""}`} aria-label="Destination" value={profile.destination} onChange={(e) => set("destination", e.target.value)}>
           <option value="any">Anywhere</option>
           {DESTINATIONS.map((d) => <option key={d}>{d}</option>)}
         </select>
-        <select className="input" aria-label="Degree class" value={profile.degreeClass ?? ""} onChange={(e) => set("degreeClass", (e.target.value || null) as DegreeClass | null)}>
+        <select className={`input ${profile.degreeClass ? "input-active" : ""}`} aria-label="Degree class" value={profile.degreeClass ?? ""} onChange={(e) => set("degreeClass", (e.target.value || null) as DegreeClass | null)}>
           <option value="">Degree class (if graduate)</option>
           {(Object.keys(CLASS_LABELS) as DegreeClass[]).map((c) => <option key={c} value={c}>{CLASS_LABELS[c]}</option>)}
         </select>

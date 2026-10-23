@@ -11,6 +11,7 @@ import { CHANCE_ORDER, checkProgramme, defaultMaxAggregate, generalAggregate } f
 import { EXAM_LABELS } from "@/lib/grades";
 import { KEYS, usePersisted } from "@/lib/store";
 import type { Chance, EligibilityResult, Field, Sitting } from "@/lib/types";
+import { SITE_TITLE } from "@/lib/site";
 
 interface Filters {
   q: string;
@@ -87,7 +88,7 @@ export function CheckClient() {
     const text = `My WASSCE aggregate is ${aggregate ?? "-"} and I qualify for ${possible} university programmes in Ghana. Check yours free:`;
     const url = window.location.origin + "/check";
     try {
-      if (navigator.share) await navigator.share({ title: "UniChecker.gh", text, url });
+      if (navigator.share) await navigator.share({ title: SITE_TITLE, text, url });
       else {
         await navigator.clipboard.writeText(`${text} ${url}`);
         alert("Copied - paste it on WhatsApp!");
@@ -121,7 +122,7 @@ export function CheckClient() {
               </div>
             ))}
             {list.length < 4 && (
-              <button className="chip hover:border-brand hover:text-brand" onClick={addSitting}>
+              <button className="chip !py-1.5" onClick={addSitting}>
                 <Plus size={13} /> Add another sitting
               </button>
             )}
@@ -218,23 +219,23 @@ function Toolbar({ filters, setFilters }: { filters: Filters; setFilters: React.
       <label className="relative sm:col-span-2 xl:col-span-4">
         <span className="sr-only">Search</span>
         <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-        <input className="input !pl-9" placeholder="Search programme or career" value={filters.q} onChange={(e) => set("q", e.target.value)} />
+        <input className={`input !pl-9 ${filters.q ? "input-active" : ""}`} placeholder="Search programme or career" value={filters.q} onChange={(e) => set("q", e.target.value)} />
       </label>
-      <select className="input" aria-label="Field" value={filters.field} onChange={(e) => set("field", e.target.value as Filters["field"])}>
+      <select className={`input ${filters.field !== "all" ? "input-active" : ""}`} aria-label="Field" value={filters.field} onChange={(e) => set("field", e.target.value as Filters["field"])}>
         <option value="all">All fields</option>
         {(Object.keys(FIELD_LABELS) as Field[]).map((f) => <option key={f} value={f}>{FIELD_LABELS[f]}</option>)}
       </select>
-      <select className="input" aria-label="Region" value={filters.region} onChange={(e) => set("region", e.target.value)}>
+      <select className={`input ${filters.region !== "all" ? "input-active" : ""}`} aria-label="Region" value={filters.region} onChange={(e) => set("region", e.target.value)}>
         <option value="all">All regions</option>
         {REGIONS.map((r) => <option key={r}>{r}</option>)}
       </select>
-      <select className="input" aria-label="Institution type" value={filters.type} onChange={(e) => set("type", e.target.value as Filters["type"])}>
+      <select className={`input ${filters.type !== "all" ? "input-active" : ""}`} aria-label="Institution type" value={filters.type} onChange={(e) => set("type", e.target.value as Filters["type"])}>
         <option value="all">Public, private & technical</option>
         <option value="public">Public universities</option>
         <option value="private">Private universities</option>
         <option value="technical">Technical universities</option>
       </select>
-      <select className="input" aria-label="Level" value={filters.level} onChange={(e) => set("level", e.target.value as Filters["level"])}>
+      <select className={`input ${filters.level !== "all" ? "input-active" : ""}`} aria-label="Level" value={filters.level} onChange={(e) => set("level", e.target.value as Filters["level"])}>
         <option value="all">Degree, HND & diploma</option>
         <option value="degree">Degree</option>
         <option value="hnd">HND</option>

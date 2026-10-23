@@ -1,4 +1,4 @@
-# UniChecker.gh
+# CampusCompass.gh
 
 A free admission guide for Ghanaian students. Enter WASSCE, NOVDEC or SSSCE grades and see every university
 programme you qualify for, sorted into **Safe / Competitive / Reach**. It also covers masters/PhD matching,

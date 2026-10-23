@@ -1,5 +1,5 @@
 // Offline support: network-first for pages, cache-first for static assets.
-const CACHE = "unichecker-v1";
+const CACHE = "campuscompass-v1";
 const PRECACHE = ["/", "/check", "/results", "/scholarships", "/postgraduate", "/universities", "/plan"];
 
 self.addEventListener("install", (event) => {

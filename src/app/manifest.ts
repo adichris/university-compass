@@ -1,14 +1,15 @@
 import type { MetadataRoute } from "next";
+import { SITE, SITE_TITLE } from "@/lib/site";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "UniChecker.gh",
-    short_name: "UniChecker",
+    name: SITE_TITLE,
+    short_name: SITE.name,
     description: "Check your university admission chances in Ghana - free.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f7f8f5",
-    theme_color: "#0b6b3f",
+    background_color: "#f5f6fb",
+    theme_color: "#3f3dbc",
     icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" }],
   };
 }

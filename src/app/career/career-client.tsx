@@ -83,7 +83,7 @@ export function CareerClient() {
                   type="button"
                   aria-pressed={answers[qi] === oi}
                   onClick={() => setAnswers((a) => a.map((x, i) => (i === qi ? oi : x)))}
-                  className={`rounded-xl border px-3 py-2.5 text-left text-sm transition ${answers[qi] === oi ? "border-brand bg-brand-soft font-medium text-brand" : "border-border hover:bg-surface-2"}`}
+                  className={`toggle-option ${answers[qi] === oi ? "toggle-option-active" : ""}`}
                 >
                   {o.label}
                 </button>

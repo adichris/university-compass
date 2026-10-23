@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { GraduationCap, Menu, UserRound, X } from "lucide-react";
+import { Compass, Menu, UserRound, X } from "lucide-react";
 import { useAuth } from "./auth";
+import { SITE } from "@/lib/site";
 
 export const NAV = [
   { href: "/check", label: "Admission checker" },
@@ -22,13 +23,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+      <div className="gh-stripe h-1" aria-hidden />
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
         <Link href="/" className="flex items-center gap-2 font-bold tracking-tight" onClick={() => setOpen(false)}>
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-white dark:text-[#06140c]">
-            <GraduationCap size={20} />
+            <Compass size={20} />
           </span>
           <span>
-            UniChecker<span className="text-accent">.gh</span>
+            {SITE.name}<span className="text-accent">{SITE.suffix}</span>
           </span>
         </Link>
         <nav className="ml-auto hidden items-center gap-1 xl:flex">

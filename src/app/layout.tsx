@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/auth";
 import { SiteHeader } from "@/components/site-header";
 import { ServiceWorker } from "@/components/service-worker";
 import "./globals.css";
+import { SITE, SITE_TITLE } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,18 +19,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "UniChecker.gh - Check your university admission chances in Ghana",
-    template: "%s · UniChecker.gh",
+    default: `${SITE_TITLE} - ${SITE.tagline}`,
+    template: `%s · ${SITE_TITLE}`,
   },
   description:
     "Free tool: enter your WASSCE, NOVDEC or SSSCE grades and instantly see which Ghanaian universities and programmes you qualify for. Masters, PhD and scholarships too.",
-  applicationName: "UniChecker.gh",
+  applicationName: SITE_TITLE,
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0b6b3f" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1411" },
+    { media: "(prefers-color-scheme: light)", color: "#3f3dbc" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0f1c" },
   ],
 };
 

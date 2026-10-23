@@ -19,6 +19,8 @@ export interface Sitting {
   id: string;
   exam: ExamType;
   year: number;
+  /** SHS programme picked in "quick start", shown as the active choice */
+  track?: string;
   /** subject name -> grade code, e.g. { "Physics": "B3" } */
   grades: Record<string, string>;
 }

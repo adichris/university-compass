@@ -1,3 +1,5 @@
+import { SITE, SITE_TITLE } from "./site";
+
 /** Build a minimal all-day .ics reminder event (works with Google, Apple and Outlook calendars). */
 export function icsEvent({ title, date, description, url }: { title: string; date: Date; description: string; url: string }): string {
   const ymd = (d: Date) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
@@ -7,9 +9,9 @@ export function icsEvent({ title, date, description, url }: { title: string; dat
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//UniChecker.gh//EN",
+    `PRODID:-//${SITE_TITLE}//EN`,
     "BEGIN:VEVENT",
-    `UID:${ymd(date)}-${title.replace(/\W+/g, "-").toLowerCase()}@unichecker.gh`,
+    `UID:${ymd(date)}-${title.replace(/\W+/g, "-").toLowerCase()}@${SITE.domain}`,
     `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
     `DTSTART;VALUE=DATE:${ymd(date)}`,
     `DTEND;VALUE=DATE:${ymd(next)}`,

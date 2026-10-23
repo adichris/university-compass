@@ -120,7 +120,7 @@ export function PostgradClient() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="label" htmlFor="target">Looking for</label>
-            <select id="target" className="input" value={profile.target} onChange={(e) => set("target", e.target.value as PostgradProfile["target"])}>
+            <select id="target" className={`input ${profile.target !== "any" ? "input-active" : ""}`} value={profile.target} onChange={(e) => set("target", e.target.value as PostgradProfile["target"])}>
               <option value="any">Any level</option>
               <option value="masters">Master&apos;s (taught)</option>
               <option value="mphil">MPhil (research)</option>
@@ -129,7 +129,7 @@ export function PostgradClient() {
           </div>
           <div>
             <label className="label" htmlFor="where">Where</label>
-            <select id="where" className="input" value={profile.location} onChange={(e) => set("location", e.target.value as PostgradProfile["location"])}>
+            <select id="where" className={`input ${profile.location !== "any" ? "input-active" : ""}`} value={profile.location} onChange={(e) => set("location", e.target.value as PostgradProfile["location"])}>
               <option value="any">Ghana & abroad</option>
               <option value="ghana">Ghana only</option>
               <option value="abroad">Abroad only</option>
