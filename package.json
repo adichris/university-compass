@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "seed:check": "vitest run src/lib/data.test.ts"
+    "build:standalone": "next build && node scripts/standalone-assets.mjs",
+    "start:standalone": "node .next/standalone/server.js"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
@@ -29,5 +30,8 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

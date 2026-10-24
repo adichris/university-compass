@@ -1,8 +1,11 @@
 import "server-only";
 import { createClient, type Client } from "@libsql/client";
 
-// Local dev: a SQLite file. Production: a free Turso database (set TURSO_DATABASE_URL + TURSO_AUTH_TOKEN).
-const url = process.env.TURSO_DATABASE_URL ?? "file:unichecker.db";
+// DATABASE_URL picks the database:
+//   file:/home/<account>/data/campuscompass.db  - SQLite file (alwaysdata, any VPS)
+//   libsql://...  (+ TURSO_AUTH_TOKEN)          - Turso (Vercel / serverless)
+// Unset: a local SQLite file for development. TURSO_DATABASE_URL is still accepted for older configs.
+const url = process.env.DATABASE_URL ?? process.env.TURSO_DATABASE_URL ?? "file:unichecker.db";
 
 const globalForDb = globalThis as unknown as { __db?: Client; __dbReady?: Promise<void> };
 
@@ -48,6 +51,8 @@ const SCHEMA = [
 
 export function ready(): Promise<void> {
   globalForDb.__dbReady ??= (async () => {
+    // WAL lets reads continue while a write is in progress on a single SQLite file.
+    if (url.startsWith("file:")) await db.execute("PRAGMA journal_mode = WAL");
     await db.batch(SCHEMA, "write");
   })();
   return globalForDb.__dbReady;
