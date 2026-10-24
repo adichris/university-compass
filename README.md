@@ -35,8 +35,12 @@ The local database is a SQLite file (`unichecker.db`) that is created automatica
 1. Create a free [Turso](https://turso.tech) database and copy its URL and token.
 2. Import the repo on [Vercel](https://vercel.com) (Hobby plan) and set:
    - `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`
-   - `NEXT_PUBLIC_SITE_URL` (e.g. `https://unichecker.gh`)
+   - `NEXT_PUBLIC_SITE_URL` (e.g. `https://campuscompass.gh`)
 3. The weekly data refresh runs on GitHub Actions (free for public repos).
+
+`vercel.json` defines a single public `app` service (the Next.js site, including its `/api/*` routes). The scraper
+is deliberately not a Vercel service: it is a batch job that edits `data/*.json` through pull requests, which a
+serverless function can't do.
 
 ## Data
 
