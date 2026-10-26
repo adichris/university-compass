@@ -1,6 +1,6 @@
 // Offline support: network-first for pages, cache-first for static assets.
 const CACHE = "campuscompass-v1";
-const PRECACHE = ["/", "/check", "/results", "/scholarships", "/postgraduate", "/universities", "/plan"];
+const PRECACHE = ["/", "/check", "/results", "/scholarships", "/postgraduate", "/universities", "/plan", "/support"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));

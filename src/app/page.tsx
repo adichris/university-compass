@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Award, BookOpenCheck, Building2, ClipboardCheck, FileSearch, GraduationCap, Sparkles } from "lucide-react";
+import { ArrowRight, Award, BookOpenCheck, Building2, ClipboardCheck, FileSearch, GraduationCap, HeartHandshake, Sparkles } from "lucide-react";
 import { postgradProgrammes, programmes, scholarships, universities, updates } from "@/lib/data";
+import { hasContact, hasDonations, SITE } from "@/lib/site";
 
 const FEATURES = [
   { href: "/check", icon: ClipboardCheck, title: "Admission checker", body: "WASSCE, NOVDEC & SSSCE grades → every programme you qualify for, sorted by your chances." },
@@ -96,6 +97,22 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {(hasDonations || hasContact) && (
+        <section className="card flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <HeartHandshake className="shrink-0 text-accent" size={32} />
+          <div className="flex-1">
+            <h2 className="font-semibold">Help keep {SITE.name} free</h2>
+            <p className="text-sm text-muted">
+              {hasDonations ? "Donate any amount with MTN MoMo to cover hosting and data updates. " : ""}
+              {hasContact ? "Need help? Our support line is on Telegram and email." : ""}
+            </p>
+          </div>
+          <Link href="/support" className="btn-primary">
+            {hasDonations ? "Donate or get help" : "Get help"} <ArrowRight size={16} />
+          </Link>
+        </section>
+      )}
     </div>
   );
 }

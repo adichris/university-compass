@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/components/auth";
 import { SiteHeader } from "@/components/site-header";
 import { ServiceWorker } from "@/components/service-worker";
+import { HelpButton } from "@/components/support";
 import "./globals.css";
 import { SITE, SITE_TITLE } from "@/lib/site";
 
@@ -46,14 +47,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <p>
                 Free for every student. Cut-off points are indicative - always confirm with the university before applying.
               </p>
-              <div className="flex gap-4">
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
                 <Link href="/about" className="hover:text-foreground">About & data</Link>
                 <Link href="/contribute" className="hover:text-foreground">Share your outcome</Link>
                 <Link href="/career" className="hover:text-foreground">Career quiz</Link>
+                <Link href="/support" className="hover:text-foreground">Support & donate</Link>
               </div>
             </div>
           </footer>
         </AuthProvider>
+        <HelpButton />
         <ServiceWorker />
       </body>
     </html>
