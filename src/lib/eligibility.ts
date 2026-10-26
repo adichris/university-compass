@@ -157,7 +157,7 @@ export function evaluate(set: GradeSet, p: Programme): Evaluation {
 }
 
 export function chanceFor(aggregate: number, cutoff: number | null): Chance {
-  if (cutoff === null) return "competitive";
+  if (cutoff === null) return "eligible";
   const margin = cutoff - aggregate;
   if (margin >= 2) return "safe";
   if (margin >= 0) return "competitive";
@@ -184,6 +184,9 @@ export function checkProgramme(sittings: Sitting[], p: Programme, uni?: Universi
     const cutoff = bestEval.set.exam === "sssce" ? null : p.cutoff;
     chance = chanceFor(bestEval.aggregate!, cutoff);
     if (cutoff === null) reasons.push(bestEval.set.exam === "sssce" ? "SSSCE: meets minimum entry; confirm current cut-off with the university" : "No recent cut-off data - you meet the minimum requirements");
+  }
+  if (!p.requirementsKnown && chance !== "ineligible") {
+    reasons.push("Checked against general entry rules only - confirm this programme's required subjects with the institution");
   }
   return {
     programme: p,
@@ -215,4 +218,4 @@ export function generalAggregate(sittings: Sitting[]): number | null {
   return best;
 }
 
-export const CHANCE_ORDER: Chance[] = ["safe", "competitive", "reach", "unlikely", "ineligible"];
+export const CHANCE_ORDER: Chance[] = ["safe", "competitive", "reach", "eligible", "unlikely", "ineligible"];

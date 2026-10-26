@@ -28,11 +28,12 @@ npm run dev        # http://localhost:3000
 npm test           # grading engine + parser tests
 ```
 
-The local database is a SQLite file (`unichecker.db`) that is created automatically.
+The local database is a SQLite file (`unichecker.db`) that is created automatically. In production, set
+`DATABASE_URL` to a PostgreSQL URL (alwaysdata), a SQLite file, or a Turso `libsql://` URL.
 
 ## Deploy for free
 
-**alwaysdata (Node.js + SQLite):** see [docs/deploy-alwaysdata.md](docs/deploy-alwaysdata.md).
+**alwaysdata (Node.js + PostgreSQL):** see [docs/deploy-alwaysdata.md](docs/deploy-alwaysdata.md).
 
 **Vercel + Turso:**
 
@@ -66,6 +67,13 @@ python -m venv .venv && .venv/Scripts/pip install -r requirements.txt   # macOS/
 python -m uc_scraper crawl      # fetch changed pages/PDFs listed in sources.yaml -> data/pending/
 python -m uc_scraper review     # approve / edit / reject each proposal
 python -m pytest tests
+```
+
+To refresh the list of institutions and their accredited programmes from the Ghana Tertiary Education Commission:
+
+```bash
+python -m uc_scraper gtec      # snapshot GTEC's register -> data/gtec/register.json (about 30 minutes)
+python -m uc_scraper build     # regenerate data/generated/*.json for the app
 ```
 
 The scraper respects `robots.txt`, rate-limits requests per host, caches pages and only parses pages whose content

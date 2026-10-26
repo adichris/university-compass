@@ -25,17 +25,28 @@ export interface Sitting {
   grades: Record<string, string>;
 }
 
+export type InstitutionType = "public" | "private" | "technical" | "college-of-education" | "health-college" | "agric-college";
+
 export interface University {
   slug: string;
   name: string;
   short: string;
-  type: "public" | "private" | "technical";
+  type: InstitutionType;
+  ownership?: "public" | "private";
+  /** GTEC accreditation category, e.g. "Public College of Education" */
+  category?: string;
   region: string;
   city: string;
+  address?: string;
+  /** Empty when we don't have the official website yet */
   website: string;
   admissionsUrl: string;
+  gtecId?: number;
+  gtecUrl?: string;
   multipleSittings: boolean;
   maxSittings: number;
+  /** false when we haven't confirmed the institution's combined-sittings policy */
+  sittingsKnown?: boolean;
   feesRange: string;
   description: string;
 }
@@ -61,7 +72,12 @@ export interface ProgrammeTemplate {
 
 export interface Programme extends ProgrammeTemplate {
   id: string;
-  template: string;
+  /** null for GTEC-listed programmes whose subject requirements we haven't mapped yet */
+  template: string | null;
+  /** false = only the general entry rules are checked (core credits + aggregate cap) */
+  requirementsKnown: boolean;
+  /** GTEC accreditation end date, DD-MM-YYYY */
+  accreditedTo?: string | null;
   university: string;
   cutoff: number | null;
   history?: Record<string, number>;
@@ -71,7 +87,8 @@ export interface Programme extends ProgrammeTemplate {
   lastChecked?: string;
 }
 
-export type Chance = "safe" | "competitive" | "reach" | "unlikely" | "ineligible";
+/** "eligible" = meets the entry requirements, but there is no cut-off data to compare against */
+export type Chance = "safe" | "competitive" | "reach" | "eligible" | "unlikely" | "ineligible";
 
 export interface EligibilityResult {
   programme: Programme;
@@ -104,6 +121,8 @@ export interface PostgradProgramme {
   modes: string[];
   url: string;
   note?: string;
+  /** false for GTEC-listed programmes shown with typical (not verified) requirements */
+  requirementsKnown?: boolean;
 }
 
 export interface PostgradProfile {

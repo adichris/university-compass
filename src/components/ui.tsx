@@ -9,6 +9,7 @@ export const CHANCE_META: Record<Chance, { label: string; hint: string }> = {
   safe: { label: "Safe", hint: "Your aggregate is comfortably better than the last cut-off" },
   competitive: { label: "Competitive", hint: "At or just inside the last cut-off - a good chance" },
   reach: { label: "Reach", hint: "Slightly outside the last cut-off - possible if the cut-off moves" },
+  eligible: { label: "Meets minimum", hint: "You meet the entry requirements; there is no cut-off data to compare against yet" },
   unlikely: { label: "Unlikely", hint: "Well outside the last cut-off" },
   ineligible: { label: "Not eligible", hint: "A subject or grade requirement isn't met" },
 };

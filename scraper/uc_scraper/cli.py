@@ -3,6 +3,8 @@
     python -m uc_scraper crawl            fetch changed sources -> data/pending/<date>.json
     python -m uc_scraper review           approve/reject pending proposals interactively
     python -m uc_scraper apply --min 0.9  apply high-confidence proposals without prompts (CI opens a PR for review)
+    python -m uc_scraper gtec             snapshot GTEC's register of accredited institutions + programmes
+    python -m uc_scraper build            turn the GTEC snapshot into app data (data/generated/)
 """
 
 from __future__ import annotations
@@ -163,6 +165,24 @@ def apply_cmd(args) -> None:
     apply_proposals(lambda p, *_: "apply" if p.get("confidence", 0) >= args.min else "keep")
 
 
+def gtec_cmd(args) -> None:
+    from .gtec import crawl as crawl_gtec
+
+    config = yaml.safe_load(SOURCES.read_text(encoding="utf-8"))
+    only = {int(x) for x in args.only} if args.only else None
+    out = crawl_gtec(
+        config["user_agent"], delay=args.delay, with_programmes=not args.no_programmes,
+        only_ids=only, missing_only=args.missing,
+    )
+    print(f"Snapshot written to {out.relative_to(ROOT)}")
+
+
+def build_cmd(_args) -> None:
+    from .build import build
+
+    build()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="uc_scraper")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -175,5 +195,13 @@ def main() -> None:
     a = sub.add_parser("apply", help="apply proposals above a confidence threshold")
     a.add_argument("--min", type=float, default=0.9)
     a.set_defaults(func=apply_cmd)
+    g = sub.add_parser("gtec", help="snapshot the GTEC accredited institutions register")
+    g.add_argument("--no-programmes", action="store_true", help="only refresh the institution list")
+    g.add_argument("--only", nargs="*", help="GTEC institution ids whose programmes to refresh")
+    g.add_argument("--delay", type=float, default=1.5, help="seconds between requests")
+    g.add_argument("--missing", action="store_true", help="only fetch institutions whose programme list is incomplete")
+    g.set_defaults(func=gtec_cmd)
+    b = sub.add_parser("build", help="generate app data from the GTEC snapshot")
+    b.set_defaults(func=build_cmd)
     args = parser.parse_args()
     args.func(args)

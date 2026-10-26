@@ -25,6 +25,8 @@
   --competitive-bg: #e9e8fb;
   --reach: #a15c00;
   --reach-bg: #fbefd9;
+  --eligible: #0e7490;
+  --eligible-bg: #dcf2f7;
   --unlikely: #a3361a;
   --unlikely-bg: #fae4dc;
   --ineligible: #6b7080;
@@ -52,6 +54,8 @@
     --competitive-bg: #24254a;
     --reach: #f5b44f;
     --reach-bg: #3a2a10;
+    --eligible: #5fcde4;
+    --eligible-bg: #123540;
     --unlikely: #f29a73;
     --unlikely-bg: #3a2016;
     --ineligible: #9ca3af;

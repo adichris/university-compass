@@ -198,7 +198,7 @@ export function PostgradClient() {
                   <ListPlus size={15} /> {tracker.has(p.id) ? "In my plan" : "Add to plan"}
                 </button>
                 <a href={p.url} target="_blank" rel="noreferrer" className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-brand">
-                  Official info <ExternalLink size={13} />
+                  {p.requirementsKnown === false ? "GTEC listing" : "Official info"} <ExternalLink size={13} />
                 </a>
               </div>
             </article>

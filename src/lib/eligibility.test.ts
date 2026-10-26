@@ -129,3 +129,31 @@ describe("postgrad", () => {
     expect(r.status).toBe("not-yet");
   });
 });
+
+describe("programmes without mapped requirements", () => {
+  const generic = {
+    ...programmes.find((p) => p.id === "ug-business-admin")!,
+    id: "x--bsc-something",
+    template: null,
+    requirementsKnown: false,
+    groups: [],
+    fillFrom: null,
+    cutoff: null,
+    maxAggregate: 24,
+  };
+
+  it("uses general rules, reports Meets minimum and says requirements are unverified", () => {
+    const r = checkProgramme([science], generic);
+    expect(r.chance).toBe("eligible");
+    expect(r.reasons.join(" ")).toMatch(/general entry rules/);
+  });
+
+  it("still applies the aggregate cap", () => {
+    const weak: Sitting = { ...science, grades: Object.fromEntries(Object.keys(science.grades).map((k) => [k, "C6"])) };
+    expect(checkProgramme([weak], generic).chance).toBe("ineligible"); // 36 > 24
+  });
+
+  it("maps a missing cut-off to eligible", () => {
+    expect(chanceFor(20, null)).toBe("eligible");
+  });
+});

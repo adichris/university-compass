@@ -29,12 +29,17 @@ jobs:
           restore-keys: scraper-state-
       - run: python -m uc_scraper crawl
       - run: python -m uc_scraper apply --min 0.9
+      # Refresh the GTEC register of accredited institutions and programmes, then regenerate app data.
+      - run: python -m uc_scraper gtec --delay 1.5
+        timeout-minutes: 90
+      - run: python -m uc_scraper build
       # Every change lands as a pull request: merging it is the human review step.
       - uses: peter-evans/create-pull-request@v7
         with:
           branch: data/weekly-refresh
-          title: "Data refresh: cut-offs & scholarship deadlines"
+          title: "Data refresh: GTEC register, cut-offs & scholarship deadlines"
           commit-message: "Refresh admission data from official sources"
           body: |
             Automated weekly crawl. Check each changed value against the `source` URL before merging.
+            `data/gtec/` and `data/generated/` come from GTEC's public register of accredited institutions.
             Low-confidence proposals remain in `data/pending/` for `python -m uc_scraper review`.

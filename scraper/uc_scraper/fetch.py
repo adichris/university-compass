@@ -12,6 +12,7 @@ from urllib.parse import urlparse
 import requests
 
 CACHE_DIR = Path(__file__).resolve().parent.parent / ".cache"
+RETRY_BACKOFF = [10, 30, 60, 120]  # seconds to wait before each retry
 
 
 @dataclass
@@ -66,12 +67,28 @@ class Fetcher:
         if not self.allowed(url):
             print(f"  robots.txt disallows {url} - skipping")
             return None
-        self._throttle(url)
-        try:
-            resp = self.session.get(url, timeout=self.timeout)
-            resp.raise_for_status()
-        except requests.RequestException as exc:
-            print(f"  fetch failed for {url}: {exc}")
+        resp, last_error = None, None
+        # Retry network errors, timeouts, 429 and 5xx with increasing waits; give up on other 4xx.
+        for attempt, backoff in enumerate([0, *RETRY_BACKOFF]):
+            if backoff:
+                print(f"  retrying in {backoff}s ({attempt}/{len(RETRY_BACKOFF)}): {url}")
+                time.sleep(backoff)
+            self._throttle(url)
+            try:
+                r = self.session.get(url, timeout=self.timeout)
+            except requests.RequestException as exc:
+                last_error = exc
+                continue
+            if r.status_code == 429 or r.status_code >= 500:
+                last_error = f"HTTP {r.status_code}"
+                continue
+            if r.status_code >= 400:
+                print(f"  fetch failed for {url}: HTTP {r.status_code}")
+                return None
+            resp = r
+            break
+        if resp is None:
+            print(f"  fetch failed for {url} after {len(RETRY_BACKOFF) + 1} attempts: {last_error}")
             return None
         content = resp.content
         fp = hashlib.sha256(content).hexdigest()

@@ -6,21 +6,23 @@ import { useSearchParams } from "next/navigation";
 import { ChevronDown, ListPlus, Plus, Search, Share2, Users, X } from "lucide-react";
 import { cleanSittings, GradeEditor, newSitting } from "@/components/grade-editor";
 import { CHANCE_META, ChanceBadge, SaveButton, useOutcomeStats, useSaved, useTracker } from "@/components/ui";
-import { FIELD_LABELS, programmes, REGIONS, universityBySlug } from "@/lib/data";
+import { FIELD_LABELS, programmes, REGIONS, TYPE_LABELS, TYPE_ORDER, universityBySlug } from "@/lib/data";
 import { CHANCE_ORDER, checkProgramme, defaultMaxAggregate, generalAggregate } from "@/lib/eligibility";
 import { EXAM_LABELS } from "@/lib/grades";
 import { KEYS, usePersisted } from "@/lib/store";
-import type { Chance, EligibilityResult, Field, Sitting } from "@/lib/types";
+import type { Chance, EligibilityResult, Field, InstitutionType, Sitting } from "@/lib/types";
 import { SITE_TITLE } from "@/lib/site";
 
 interface Filters {
   q: string;
   field: Field | "all";
   region: string;
-  type: "all" | "public" | "private" | "technical";
+  type: "all" | InstitutionType;
   level: "all" | "degree" | "hnd" | "diploma";
   chance: Chance | "possible" | "all";
 }
+
+const POSSIBLE: Chance[] = ["safe", "competitive", "reach", "eligible"];
 
 const DEFAULT_FILTERS: Filters = { q: "", field: "all", region: "all", type: "all", level: "all", chance: "possible" };
 
@@ -50,7 +52,7 @@ export function CheckClient() {
   }, [clean, filled]);
 
   const counts = useMemo(() => {
-    const c: Record<Chance, number> = { safe: 0, competitive: 0, reach: 0, unlikely: 0, ineligible: 0 };
+    const c: Record<Chance, number> = { safe: 0, competitive: 0, reach: 0, eligible: 0, unlikely: 0, ineligible: 0 };
     for (const r of results) c[r.chance]++;
     return c;
   }, [results]);
@@ -61,7 +63,7 @@ export function CheckClient() {
       .filter((r) => {
         const p = r.programme;
         const u = universityBySlug.get(p.university)!;
-        if (filters.chance === "possible" && !["safe", "competitive", "reach"].includes(r.chance)) return false;
+        if (filters.chance === "possible" && !POSSIBLE.includes(r.chance)) return false;
         if (filters.chance !== "possible" && filters.chance !== "all" && r.chance !== filters.chance) return false;
         if (filters.field !== "all" && p.field !== filters.field) return false;
         if (filters.region !== "all" && u.region !== filters.region) return false;
@@ -84,7 +86,7 @@ export function CheckClient() {
   };
 
   const share = async () => {
-    const possible = counts.safe + counts.competitive + counts.reach;
+    const possible = counts.safe + counts.competitive + counts.reach + counts.eligible;
     const text = `My WASSCE aggregate is ${aggregate ?? "-"} and I qualify for ${possible} university programmes in Ghana. Check yours free:`;
     const url = window.location.origin + "/check";
     try {
@@ -160,7 +162,7 @@ export function CheckClient() {
 
         {filled && (
           <>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
               {CHANCE_ORDER.map((c) => (
                 <button
                   key={c}
@@ -230,10 +232,8 @@ function Toolbar({ filters, setFilters }: { filters: Filters; setFilters: React.
         {REGIONS.map((r) => <option key={r}>{r}</option>)}
       </select>
       <select className={`input ${filters.type !== "all" ? "input-active" : ""}`} aria-label="Institution type" value={filters.type} onChange={(e) => set("type", e.target.value as Filters["type"])}>
-        <option value="all">Public, private & technical</option>
-        <option value="public">Public universities</option>
-        <option value="private">Private universities</option>
-        <option value="technical">Technical universities</option>
+        <option value="all">All institution types</option>
+        {TYPE_ORDER.map((t) => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
       </select>
       <select className={`input ${filters.level !== "all" ? "input-active" : ""}`} aria-label="Level" value={filters.level} onChange={(e) => set("level", e.target.value as Filters["level"])}>
         <option value="all">Degree, HND & diploma</option>
@@ -271,7 +271,7 @@ function ResultCard({
           </p>
         </div>
         <div className="shrink-0 text-right">
-          <div className="text-xs text-muted">You / cut-off</div>
+          <div className="text-xs text-muted">{p.cutoff === null ? "You / max" : "You / cut-off"}</div>
           <div className="font-mono text-lg font-semibold">
             {r.aggregate ?? "--"} <span className="text-muted">/ {p.cutoff ?? defaultMaxAggregate(p)}</span>
           </div>
@@ -322,8 +322,11 @@ function ResultCard({
             <p><span className="font-medium text-foreground">Careers:</span> {p.careers.join(", ")}</p>
             {p.note && <p>{p.note}</p>}
             <p className="text-xs">
-              Cut-off {p.verified ? "verified" : "is an estimate"}{p.lastChecked ? ` (checked ${p.lastChecked})` : ""}.{" "}
-              <a href={u.admissionsUrl} target="_blank" rel="noreferrer" className="text-brand underline">Official admissions page</a>
+              {p.cutoff === null ? "No cut-off data yet" : `Cut-off ${p.verified ? "verified" : "is an estimate"}${p.lastChecked ? ` (checked ${p.lastChecked})` : ""}`}.
+              {p.accreditedTo ? ` Accredited by GTEC until ${p.accreditedTo}.` : ""}{" "}
+              <a href={u.admissionsUrl} target="_blank" rel="noreferrer" className="text-brand underline">
+                {u.website ? "Official admissions page" : "GTEC accreditation listing"}
+              </a>
             </p>
           </div>
         </div>
@@ -333,6 +336,9 @@ function ResultCard({
 }
 
 export function describeRequirements(p: EligibilityResult["programme"]): string {
+  if (!p.requirementsKnown) {
+    return `Specific subjects not yet in our data. General rule: credits (C6 or better) in English, Core Maths, Integrated Science or Social Studies and three electives, aggregate ${defaultMaxAggregate(p)} or better.`;
+  }
   const core = p.core === "science" ? "Credits in English, Core Maths and Integrated Science" : p.core === "social" ? "Credits in English, Core Maths and Social Studies" : "Credits in English, Core Maths and Integrated Science or Social Studies";
   const groups = p.groups.map((g) => (g.count === 1 ? g.anyOf.join("/") : `${g.count} of ${g.anyOf.join("/")}`));
   const fill = p.fillFrom === null ? "any other elective(s)" : p.fillFrom.length ? `others from ${p.fillFrom.join(", ")}` : "";
