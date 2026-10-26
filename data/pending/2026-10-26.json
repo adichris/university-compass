@@ -1,0 +1,158 @@
+{
+  "proposals": [
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-agriculture",
+      "cutoff": 11,
+      "evidence": "Faculty of Agriculture 11",
+      "confidence": 0.73
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-civil-engineering",
+      "cutoff": 26,
+      "evidence": "COLLEGE OF ENGINEERING 26",
+      "confidence": 0.78
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-petroleum-engineering",
+      "cutoff": 14,
+      "evidence": "14) BSC. PETROCHEMICAL ENGINEERING",
+      "confidence": 0.83
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-geomatic-engineering",
+      "cutoff": 9,
+      "evidence": "9) BSC. GEOMATIC (GEODETIC) ENGINEERING",
+      "confidence": 0.82
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-mechanical-engineering",
+      "cutoff": 13,
+      "evidence": "13) BSC. BIOMEDICAL ENGINEERING",
+      "confidence": 0.82
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-actuarial-science",
+      "cutoff": 6,
+      "evidence": "6) BSC. ACTUARIAL SCIENCE ability.",
+      "confidence": 0.81
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-mathematics",
+      "cutoff": 20,
+      "evidence": "20 B. Ed Mathmatics 21",
+      "confidence": 0.77
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-medical-lab",
+      "cutoff": 6,
+      "evidence": "6 BSc. Medical Laboratory Science 07 6 BA. History 15",
+      "confidence": 0.87
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf",
+      "programme_id": "knust-environmental-science",
+      "cutoff": 15,
+      "evidence": "15 BSc. Environmental Sciences (Obuasi Campus) 19",
+      "confidence": 0.74
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf",
+      "programme_id": "knust-sociology",
+      "cutoff": 6,
+      "evidence": "6. Department of Sociology and Social Work",
+      "confidence": 0.79
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf",
+      "programme_id": "knust-computer-science",
+      "cutoff": 6,
+      "evidence": "6. Department of Computer Science",
+      "confidence": 0.74
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf",
+      "programme_id": "knust-economics",
+      "cutoff": 26,
+      "evidence": "26. MSc. Economics",
+      "confidence": 0.82
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf",
+      "programme_id": "knust-actuarial-science",
+      "cutoff": 32,
+      "evidence": "32. MSc. Actuarial Science",
+      "confidence": 0.89
+    },
+    {
+      "type": "cutoff",
+      "source": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf",
+      "programme_id": "knust-natural-resources",
+      "cutoff": 38,
+      "evidence": "38. MSc. Environmental Resources Management",
+      "confidence": 0.76
+    }
+  ],
+  "changed": [
+    {
+      "source": "knust-admissions",
+      "url": "https://www.knust.edu.gh/admissions"
+    },
+    {
+      "source": "knust-admissions",
+      "url": "https://webapps.knust.edu.gh/check/forms/Admission_Requirement.pdf"
+    },
+    {
+      "source": "knust-admissions",
+      "url": "https://webapps.knust.edu.gh/check/forms/POSTGRADUATE_ADMISSIONS.pdf"
+    },
+    {
+      "source": "uew-admissions",
+      "url": "https://www.uew.edu.gh/admissions"
+    },
+    {
+      "source": "chevening",
+      "url": "https://www.chevening.org/scholarships/"
+    },
+    {
+      "source": "commonwealth",
+      "url": "https://cscuk.fcdo.gov.uk/scholarships/"
+    },
+    {
+      "source": "daad",
+      "url": "https://www.daad.de/en/"
+    },
+    {
+      "source": "gsa",
+      "url": "https://scholarships.gov.gh/"
+    },
+    {
+      "source": "waec-news",
+      "url": "https://waecgh.org/"
+    },
+    {
+      "source": "gtec-accredited",
+      "url": "https://gtec.edu.gh/"
+    }
+  ]
+}
