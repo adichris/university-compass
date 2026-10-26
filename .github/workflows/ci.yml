@@ -1,0 +1,39 @@
+name: Checks
+
+# Server builds skip Next.js's TypeScript step to stay within shared-hosting memory, so the full
+# type check, lint and tests run here on every push and pull request instead.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/prepare-data.mjs
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Lint
+        run: npx eslint src scripts
+      - name: Tests
+        run: npx vitest run
+
+  scraper:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: scraper
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt pytest
+      - run: python -m pytest -q tests
