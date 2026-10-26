@@ -1,5 +1,5 @@
 import { clientKey, rateLimited } from "@/lib/auth";
-import { db, ready } from "@/lib/db";
+import { query } from "@/lib/db";
 
 const TOPICS = new Set(["results", "admissions", "scholarships"]);
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -13,11 +13,10 @@ export async function POST(req: Request) {
   if (!EMAIL.test(email) || topics.length === 0) {
     return Response.json({ error: "Enter a valid email and pick at least one alert." }, { status: 400 });
   }
-  await ready();
-  await db.execute({
-    sql: `INSERT INTO alerts (email, topics, created_at) VALUES (?, ?, ?)
-          ON CONFLICT(email) DO UPDATE SET topics = excluded.topics`,
-    args: [email, topics.join(","), Date.now()],
-  });
+  await query(
+    `INSERT INTO alerts (email, topics, created_at) VALUES (?, ?, ?)
+     ON CONFLICT (email) DO UPDATE SET topics = excluded.topics`,
+    [email, topics.join(","), Date.now()],
+  );
   return Response.json({ ok: true });
 }

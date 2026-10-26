@@ -2,7 +2,7 @@ import "server-only";
 import { createHash, randomBytes, randomUUID, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { cookies } from "next/headers";
-import { db, ready } from "./db";
+import { query } from "./db";
 
 const scrypt = promisify(scryptCb) as (pw: string, salt: Buffer, len: number) => Promise<Buffer>;
 
@@ -32,28 +32,25 @@ export async function verifyPassword(password: string, stored: string): Promise<
 const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 
 export async function createUser(email: string, password: string, name: string | null): Promise<SessionUser> {
-  await ready();
   const id = randomUUID();
-  await db.execute({
-    sql: "INSERT INTO users (id, email, name, password_hash, created_at) VALUES (?, ?, ?, ?, ?)",
-    args: [id, email, name, await hashPassword(password), Date.now()],
-  });
+  await query("INSERT INTO users (id, email, name, password_hash, created_at) VALUES (?, ?, ?, ?, ?)", [
+    id, email, name, await hashPassword(password), Date.now(),
+  ]);
   return { id, email, name };
 }
 
 export async function findUserByEmail(email: string) {
-  await ready();
-  const r = await db.execute({ sql: "SELECT id, email, name, password_hash FROM users WHERE email = ?", args: [email] });
-  return r.rows[0] as unknown as (SessionUser & { password_hash: string }) | undefined;
+  const rows = await query<SessionUser & { password_hash: string }>(
+    "SELECT id, email, name, password_hash FROM users WHERE email = ?",
+    [email],
+  );
+  return rows[0];
 }
 
 export async function startSession(userId: string): Promise<void> {
   const token = randomBytes(32).toString("base64url");
   const expires = Date.now() + SESSION_DAYS * 86_400_000;
-  await db.execute({
-    sql: "INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)",
-    args: [sha256(token), userId, expires],
-  });
+  await query("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)", [sha256(token), userId, expires]);
   (await cookies()).set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
@@ -67,8 +64,7 @@ export async function endSession(): Promise<void> {
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
   if (token) {
-    await ready();
-    await db.execute({ sql: "DELETE FROM sessions WHERE token_hash = ?", args: [sha256(token)] });
+    await query("DELETE FROM sessions WHERE token_hash = ?", [sha256(token)]);
   }
   jar.delete(SESSION_COOKIE);
 }
@@ -77,13 +73,11 @@ export async function endSession(): Promise<void> {
 export async function currentUser(): Promise<SessionUser | null> {
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  await ready();
-  const r = await db.execute({
-    sql: `SELECT u.id, u.email, u.name FROM sessions s JOIN users u ON u.id = s.user_id
-          WHERE s.token_hash = ? AND s.expires_at > ?`,
-    args: [sha256(token), Date.now()],
-  });
-  const row = r.rows[0];
+  const [row] = await query(
+    `SELECT u.id, u.email, u.name FROM sessions s JOIN users u ON u.id = s.user_id
+     WHERE s.token_hash = ? AND s.expires_at > ?`,
+    [sha256(token), Date.now()],
+  );
   return row ? { id: String(row.id), email: String(row.email), name: row.name ? String(row.name) : null } : null;
 }
 

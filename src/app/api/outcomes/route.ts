@@ -1,6 +1,6 @@
 import { clientKey, rateLimited } from "@/lib/auth";
 import { programmes } from "@/lib/data";
-import { db, ready } from "@/lib/db";
+import { query } from "@/lib/db";
 
 const ids = new Set(programmes.map((p) => p.id));
 
@@ -13,19 +13,19 @@ export interface OutcomeStats {
 
 /** Crowdsourced admission outcomes, summarised per programme. Anonymous - no account needed. */
 export async function GET() {
-  await ready();
   const since = new Date().getFullYear() - 3;
-  const r = await db.execute({
-    sql: `SELECT programme_id,
-                 COUNT(*) AS n,
-                 MIN(CASE WHEN admitted = 1 THEN aggregate END) AS best_admitted,
-                 MAX(CASE WHEN admitted = 1 THEN aggregate END) AS worst_admitted,
-                 SUM(admitted) AS admitted
-          FROM outcomes WHERE year >= ? GROUP BY programme_id`,
-    args: [since],
-  });
+  // Postgres returns COUNT/SUM as strings, so every number goes through Number().
+  const rows = await query(
+    `SELECT programme_id,
+            COUNT(*) AS n,
+            MIN(CASE WHEN admitted = 1 THEN aggregate END) AS best_admitted,
+            MAX(CASE WHEN admitted = 1 THEN aggregate END) AS worst_admitted,
+            SUM(admitted) AS admitted
+     FROM outcomes WHERE year >= ? GROUP BY programme_id`,
+    [since],
+  );
   const stats: Record<string, OutcomeStats> = {};
-  for (const row of r.rows) {
+  for (const row of rows) {
     stats[String(row.programme_id)] = {
       n: Number(row.n),
       admitted: Number(row.admitted),
@@ -54,10 +54,9 @@ export async function POST(req: Request) {
   ) {
     return Response.json({ error: "Please check the programme, aggregate and year." }, { status: 400 });
   }
-  await ready();
-  await db.execute({
-    sql: "INSERT INTO outcomes (programme_id, aggregate, year, admitted, reporter_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-    args: [programmeId, aggregate, year, admitted ? 1 : 0, who, Date.now()],
-  });
+  await query(
+    "INSERT INTO outcomes (programme_id, aggregate, year, admitted, reporter_hash, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+    [programmeId, aggregate, year, admitted ? 1 : 0, who, Date.now()],
+  );
   return Response.json({ ok: true });
 }

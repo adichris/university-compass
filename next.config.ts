@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
   // Self-contained server bundle in .next/standalone for hosts like alwaysdata (see docs/deploy-alwaysdata.md).
   output: "standalone",
   partialPrefetching: true,
-  // libsql ships native bindings; keep it out of the server bundle.
-  serverExternalPackages: ["@libsql/client", "libsql"],
+  // Database drivers stay out of the server bundle (libsql ships native bindings).
+  serverExternalPackages: ["@libsql/client", "libsql", "pg"],
   turbopack: {
     rules: {
       "*.css": {
