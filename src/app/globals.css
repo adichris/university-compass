@@ -132,3 +132,13 @@ select {
 @utility gh-stripe {
   background: linear-gradient(90deg, var(--gh-red) 0 33.33%, var(--gh-gold) 33.33% 66.66%, var(--gh-green) 66.66% 100%);
 }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Side panel that stays in view on desktop and scrolls on its own when taller than the screen. */
+@utility sticky-panel {
+  @apply lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain;
+}

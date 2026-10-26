@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { ChevronDown, ListPlus, Plus, Search, Share2, Users, X } from "lucide-react";
 import { cleanSittings, GradeEditor, newSitting } from "@/components/grade-editor";
 import { CHANCE_META, ChanceBadge, SaveButton, useOutcomeStats, useSaved, useTracker } from "@/components/ui";
+import { DonationPrompt } from "@/components/support";
 import { FIELD_LABELS, programmes, REGIONS, TYPE_LABELS, TYPE_ORDER, universityBySlug } from "@/lib/data";
 import { CHANCE_ORDER, checkProgramme, defaultMaxAggregate, generalAggregate } from "@/lib/eligibility";
 import { EXAM_LABELS } from "@/lib/grades";
@@ -101,7 +102,7 @@ export function CheckClient() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
       {/* Grade entry */}
-      <section className="card h-fit lg:sticky lg:top-20">
+      <section className="card h-fit sticky-panel">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold">Your grades</h2>
           <button className="text-sm font-medium text-brand lg:hidden" onClick={() => setEditing((e) => !e)}>
@@ -210,6 +211,7 @@ export function CheckClient() {
 
         {!filled && <EmptyState />}
       </section>
+      <DonationPrompt active={filled && visible.length > 0} />
     </div>
   );
 }

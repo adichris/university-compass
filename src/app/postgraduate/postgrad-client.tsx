@@ -69,7 +69,7 @@ export function PostgradClient() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_1fr]">
-      <section className="card h-fit space-y-4 lg:sticky lg:top-20">
+      <section className="card h-fit space-y-4 sticky-panel">
         <h2 className="text-lg font-semibold">Your academic profile</h2>
         <div>
           <label className="label" htmlFor="highest">Highest qualification</label>

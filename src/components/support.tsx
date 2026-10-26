@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, Copy, HeartHandshake, LifeBuoy, Mail, Phone, Send, ShieldAlert, X } from "lucide-react";
 import { hasContact, hasDonations, SITE, SUPPORT } from "@/lib/site";
 
@@ -169,6 +169,110 @@ export function HelpButton() {
       >
         {open ? <X size={18} /> : <LifeBuoy size={18} />} {open ? "Close" : "Help"}
       </button>
+    </div>
+  );
+}
+
+// Not "uc:"-prefixed on purpose: those keys sync to accounts, this is a per-device convenience.
+const PROMPT_KEY = "cc-donate-prompt-dismissed";
+const PROMPT_SNOOZE_DAYS = 7;
+const PROMPT_SCROLL_PX = 900;
+const PROMPT_MIN_SECONDS = 5;
+
+function promptSnoozed(): boolean {
+  try {
+    const at = Number(window.localStorage.getItem(PROMPT_KEY));
+    return Boolean(at) && Date.now() - at < PROMPT_SNOOZE_DAYS * 86_400_000;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * A gentle donation card that appears once the visitor has scrolled through their results.
+ * Closing it hides it on this device for a week.
+ */
+export function DonationPrompt({ active }: { active: boolean }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!active || !hasDonations || promptSnoozed()) return;
+    const since = Date.now();
+    const onScroll = () => {
+      if (window.scrollY >= PROMPT_SCROLL_PX && Date.now() - since >= PROMPT_MIN_SECONDS * 1000) {
+        setOpen(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [active]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  function close() {
+    setOpen(false);
+    try {
+      window.localStorage.setItem(PROMPT_KEY, String(Date.now()));
+    } catch {}
+  }
+
+  if (!open) return null;
+  const { number, name } = SUPPORT.momo;
+  return (
+    <div
+      role="dialog"
+      aria-labelledby="donate-prompt-title"
+      className="fixed inset-x-4 bottom-20 z-50 mx-auto max-w-md animate-[fadeUp_.3s_ease-out] print:hidden sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2"
+    >
+      <div className="card relative space-y-3 !p-5 shadow-2xl ring-1 ring-black/5">
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Close"
+          className="absolute right-3 top-3 rounded-lg p-1.5 text-muted hover:bg-surface-2 hover:text-foreground"
+        >
+          <X size={18} />
+        </button>
+        <div className="flex items-start gap-3 pr-8">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent">
+            <HeartHandshake size={20} />
+          </span>
+          <div>
+            <h2 id="donate-prompt-title" className="font-semibold">Found this helpful?</h2>
+            <p className="text-sm text-muted">
+              {SITE.name} is free for every student. A small MoMo donation keeps it running and the admission data up to date.
+            </p>
+          </div>
+        </div>
+        {number && (
+          <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-surface-2/70 px-3 py-2">
+            <div>
+              <p className="font-mono text-lg font-bold tracking-wide">{number}</p>
+              {name && <p className="text-xs text-muted">MTN MoMo · {name}</p>}
+            </div>
+            <div className="flex gap-2">
+              <CopyButton value={number} label="Copy" />
+              <a href={MOMO_DIAL} className="btn-primary !py-1.5">
+                <Phone size={15} /> *170#
+              </a>
+            </div>
+          </div>
+        )}
+        <div className="flex items-center justify-between gap-2 text-sm">
+          <Link href="/support#donate" onClick={close} className="font-semibold text-brand">
+            More ways to support →
+          </Link>
+          <button type="button" onClick={close} className="text-muted hover:text-foreground">
+            Maybe later
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

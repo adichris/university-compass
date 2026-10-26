@@ -92,7 +92,7 @@ export function CareerClient() {
           </fieldset>
         ))}
       </div>
-      <aside className="card h-fit lg:sticky lg:top-20">
+      <aside className="card h-fit sticky-panel">
         <h2 className="text-lg font-semibold">Your best-fit fields</h2>
         {!done && <p className="mt-2 text-sm text-muted">Answer all {QUESTIONS.length} questions ({answers.filter((a) => a !== null).length} done).</p>}
         {top.length > 0 && (
