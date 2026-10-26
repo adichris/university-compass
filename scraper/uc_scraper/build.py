@@ -275,8 +275,8 @@ def best_curated_match(name: str, curated: list[dict]) -> dict | None:
     return best if score >= 0.86 else None
 
 
-def build() -> None:
-    register = load(DATA / "gtec" / "register.json")
+def build(register_path: Path = DATA / "gtec" / "register.json", out_dir: Path = GEN) -> None:
+    register = load(register_path)
     curated = load(DATA / "universities.json")
     offerings = load(DATA / "offerings.json")
     templates = {k: v for k, v in load(DATA / "programme-templates.json").items() if not k.startswith("_")}
@@ -384,11 +384,11 @@ def build() -> None:
             })
             stats["programmes"] += 1
 
-    GEN.mkdir(exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     meta = {"source": register["source"], "fetched": register["fetched"]}
-    (GEN / "institutions.json").write_text(json.dumps({**meta, "institutions": institutions, "links": links}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    (GEN / "programmes.json").write_text(json.dumps({**meta, "programmes": programmes}, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
-    (GEN / "postgrad.json").write_text(json.dumps({**meta, "programmes": postgrad}, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "institutions.json").write_text(json.dumps({**meta, "institutions": institutions, "links": links}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "programmes.json").write_text(json.dumps({**meta, "programmes": programmes}, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    (out_dir / "postgrad.json").write_text(json.dumps({**meta, "programmes": postgrad}, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(stats, indent=1))
     if unknown := [i["name"] for i in institutions if i["region"] == "Other"]:
         print(f"{len(unknown)} institution(s) without a recognised region, e.g.: {unknown[:8]}")

@@ -8,8 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "build:standalone": "next build && node scripts/standalone-assets.mjs",
-    "start:standalone": "node .next/standalone/server.js"
+    "build:standalone": "node scripts/prepare-data.mjs && next build && node scripts/standalone-assets.mjs",
+    "start:standalone": "node .next/standalone/server.js",
+    "predev": "node scripts/prepare-data.mjs",
+    "prebuild": "node scripts/prepare-data.mjs",
+    "pretest": "node scripts/prepare-data.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

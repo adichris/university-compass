@@ -53,3 +53,8 @@ scraper/state.json
 __pycache__/
 .venv/
 !.env.example
+
+# server-side admin edits, dashboard GTEC refreshes and job logs
+data/local/
+.next-build/
+.next-old/

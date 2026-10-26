@@ -8,6 +8,13 @@ import subjectsJson from "../../data/subjects.json";
 import gtecInstitutionsJson from "../../data/generated/institutions.json";
 import gtecProgrammesJson from "../../data/generated/programmes.json";
 import gtecPostgradJson from "../../data/generated/postgrad.json";
+// Server-side files (git-ignored, created by scripts/prepare-data.mjs): admin edits and GTEC data
+// refreshed from the admin dashboard. Empty files fall back to the committed data above.
+import localInstitutionsJson from "../../data/local/generated/institutions.json";
+import localProgrammesJson from "../../data/local/generated/programmes.json";
+import localPostgradJson from "../../data/local/generated/postgrad.json";
+import overridesJson from "../../data/local/overrides.json";
+import type { Overrides } from "./overrides";
 import type {
   Field,
   InstitutionType,
@@ -33,20 +40,39 @@ interface GtecProgramme {
   accreditedTo: string | null;
 }
 
-const gtec = gtecInstitutionsJson as {
+type GtecInstitutions = {
   fetched: string;
   institutions: University[];
   links: Record<string, { gtecId: number; category: string; gtecUrl: string }>;
 };
 
+// A dashboard GTEC refresh replaces the committed snapshot as a whole (institutions + programmes).
+const useLocalGtec = Boolean((localInstitutionsJson as GtecInstitutions).fetched);
+const gtec = (useLocalGtec ? localInstitutionsJson : gtecInstitutionsJson) as GtecInstitutions;
+const gtecProgrammeData = (useLocalGtec ? localProgrammesJson : gtecProgrammesJson) as { programmes: GtecProgramme[] };
+const gtecPostgradData = (useLocalGtec ? localPostgradJson : gtecPostgradJson) as { programmes: PostgradProgramme[] };
+
+const overrides = overridesJson as Overrides;
+/** When the admin edits included in this build were last saved (null = none). */
+export const overridesBuiltAt = overrides.updatedAt;
+
 /** Curated institutions (with cut-offs) plus every other institution GTEC lists as accredited. */
-export const universities: University[] = [
+const allUniversities: University[] = [
   ...(universitiesJson as University[]).map((u) => {
     const link = gtec.links[u.slug];
     return link ? { ...u, gtecId: link.gtecId, category: link.category, gtecUrl: link.gtecUrl } : u;
   }),
   ...gtec.institutions,
 ];
+
+export const universities: University[] = allUniversities
+  .filter((u) => !overrides.universities[u.slug]?.hidden)
+  .map((u) => {
+    const edits = Object.entries(overrides.universities[u.slug] ?? {}).filter(
+      ([k, v]) => k !== "hidden" && v !== undefined && v !== "",
+    );
+    return { ...u, ...Object.fromEntries(edits) };
+  });
 
 /** Date the GTEC register was last crawled, or "" if it hasn't been. */
 export const gtecFetched = gtec.fetched;
@@ -56,10 +82,12 @@ export const subjects = subjectsJson as {
   tracks: Record<string, string[]>;
   aliases: Record<string, string>;
 };
+const visibleSlugs = new Set(universities.map((u) => u.slug));
+
 export const postgradProgrammes = [
   ...(postgradJson as PostgradProgramme[]),
-  ...((gtecPostgradJson as { programmes: PostgradProgramme[] }).programmes),
-];
+  ...gtecPostgradData.programmes,
+].filter((p) => !p.university || visibleSlugs.has(p.university));
 export const scholarships = scholarshipsJson as Scholarship[];
 export const updates = updatesJson as Update[];
 
@@ -100,7 +128,7 @@ function expandOfferings(): Programme[] {
 }
 
 function expandGtecProgrammes(): Programme[] {
-  return (gtecProgrammesJson as { programmes: GtecProgramme[] }).programmes.map((g) => {
+  return gtecProgrammeData.programmes.map((g) => {
     const tpl = g.template ? templates[g.template] : undefined;
     const base: ProgrammeTemplate = tpl ?? { ...GENERAL_RULES[g.level], name: g.name, field: g.field, level: g.level, careers: [] };
     return {
@@ -118,7 +146,17 @@ function expandGtecProgrammes(): Programme[] {
   });
 }
 
-export const programmes = [...expandOfferings(), ...expandGtecProgrammes()];
+/** Every institution and programme before admin edits are applied (for the admin editor). */
+export const adminUniversities = allUniversities;
+export const adminProgrammes: Programme[] = [...expandOfferings(), ...expandGtecProgrammes()];
+
+export const programmes: Programme[] = adminProgrammes
+  .filter((p) => visibleSlugs.has(p.university) && !overrides.programmes[p.id]?.hidden)
+  .map((p) => {
+    const edit = overrides.programmes[p.id];
+    // An admin-entered cut-off counts as verified.
+    return edit && edit.cutoff !== undefined ? { ...p, cutoff: edit.cutoff, verified: edit.cutoff !== null } : p;
+  });
 
 export const universityBySlug = new Map(universities.map((u) => [u.slug, u]));
 

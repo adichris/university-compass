@@ -59,7 +59,10 @@ Environment variables (one per line):
 ```
 DATABASE_URL=postgresql://<db_user>:<password>@postgresql-<account>.alwaysdata.net:5432/<database>
 NEXT_PUBLIC_SITE_URL=https://<account>.alwaysdata.net
+STATS_SALT=<any random text>
 ```
+
+The admin dashboard password is set over SSH, not here - see "Admin dashboard" below.
 
 If the password contains characters such as `@`, `:`, `/` or `#`, percent-encode them in the URL (e.g. `@` becomes
 `%40`). Keep `DATABASE_URL` only in the site's environment settings, never in the repository.
@@ -77,6 +80,38 @@ cd ~/university-compass && bash scripts/deploy-alwaysdata.sh
 
 Then restart the site in the admin. University and scholarship data is compiled in at build time, so merging a
 weekly data-refresh PR on GitHub needs a deploy to go live.
+
+## Admin dashboard
+
+Turn it on by generating a password over SSH:
+
+```bash
+cd ~/university-compass && node scripts/admin-password.mjs
+```
+
+It prints a new random password once - copy it into your password manager. Only a hash is stored (in
+`data/local/admin.json`, ignored by git). Run the same command any time to change it; that also signs out every
+open dashboard session. `--choose` lets you type your own password instead, and `--disable` turns the dashboard off.
+
+Then sign in at `/admin` to:
+
+- **Statistics**: anonymous page views, daily visitors, admission checks, donation and support clicks.
+- **Institutions**: edit any institution's name, website, admissions link, fees and description; set verified
+  cut-offs; hide an institution or programme. Edits are saved on the server in `data/local/overrides.json`
+  (ignored by git, so `git pull` never touches them).
+- **Jobs**: run on the server in the background, with a live log:
+  - *Apply changes* rebuilds the site with your edits.
+  - *Refresh GTEC data* re-crawls GTEC's register into `data/local/` (30-40 minutes), then rebuilds.
+  - *Deploy latest code* does the same as `deploy-alwaysdata.sh`.
+
+Every rebuild is made in `.next-build` and only swapped in if it succeeds, so the site keeps running during the
+build and a failed build changes nothing. Afterwards the job stops the running server (its PID is in
+`data/local/server.pid`) and alwaysdata starts the new build on the next request. If the site doesn't come back
+within a minute, restart it in the alwaysdata admin.
+
+The first *Refresh GTEC data* run sets up the scraper's Python environment in `scraper/.venv` automatically.
+Building while the site runs uses more memory; if a job's log ends with `Killed`, run it again at a quiet time or
+deploy over SSH with the site stopped.
 
 ## Backups
 

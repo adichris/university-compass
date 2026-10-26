@@ -22,6 +22,8 @@ from .parsers import linked_pdfs, page_text, parse_cutoffs, parse_deadlines
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data"
 PENDING = DATA / "pending"
+# Server-side, git-ignored data written by admin dashboard jobs.
+LOCAL = DATA / "local"
 STATE = Path(__file__).resolve().parent.parent / "state.json"
 SOURCES = Path(__file__).resolve().parent.parent / "sources.yaml"
 
@@ -173,14 +175,19 @@ def gtec_cmd(args) -> None:
     out = crawl_gtec(
         config["user_agent"], delay=args.delay, with_programmes=not args.no_programmes,
         only_ids=only, missing_only=args.missing,
+        **({"out": LOCAL / "gtec" / "register.json"} if args.local else {}),
     )
     print(f"Snapshot written to {out.relative_to(ROOT)}")
 
 
-def build_cmd(_args) -> None:
+def build_cmd(args) -> None:
     from .build import build
 
-    build()
+    if args.local:
+        local_register = LOCAL / "gtec" / "register.json"
+        build(local_register if local_register.exists() else DATA / "gtec" / "register.json", LOCAL / "generated")
+    else:
+        build()
 
 
 def main() -> None:
@@ -200,8 +207,10 @@ def main() -> None:
     g.add_argument("--only", nargs="*", help="GTEC institution ids whose programmes to refresh")
     g.add_argument("--delay", type=float, default=1.5, help="seconds between requests")
     g.add_argument("--missing", action="store_true", help="only fetch institutions whose programme list is incomplete")
+    g.add_argument("--local", action="store_true", help="write to data/local/gtec/ (server-side, git-ignored)")
     g.set_defaults(func=gtec_cmd)
     b = sub.add_parser("build", help="generate app data from the GTEC snapshot")
+    b.add_argument("--local", action="store_true", help="read data/local/gtec/ and write data/local/generated/")
     b.set_defaults(func=build_cmd)
     args = parser.parse_args()
     args.func(args)

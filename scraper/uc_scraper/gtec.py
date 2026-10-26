@@ -110,14 +110,14 @@ def crawl_programmes(fetcher: Fetcher, gtec_id: int) -> list[dict]:
     return out
 
 
-def _save(institutions: list[dict]) -> None:
-    OUT.parent.mkdir(parents=True, exist_ok=True)
+def _save(institutions: list[dict], out: Path = OUT) -> None:
+    out.parent.mkdir(parents=True, exist_ok=True)
     snapshot = {
         "source": f"{BASE}/institutional-categories/",
         "fetched": date.today().isoformat(),
         "institutions": sorted(institutions, key=lambda x: (x["category"], x["name"])),
     }
-    OUT.write_text(json.dumps(snapshot, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    out.write_text(json.dumps(snapshot, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
 def crawl(
@@ -126,11 +126,14 @@ def crawl(
     with_programmes: bool = True,
     only_ids: set[int] | None = None,
     missing_only: bool = False,
+    out: Path = OUT,
 ) -> Path:
     """Snapshot the register. Progress is saved after every institution, so an interrupted run loses
     nothing; `missing_only` then fetches just the institutions whose programme list is incomplete."""
     fetcher = Fetcher(user_agent, delay)
-    previous = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {"institutions": []}
+    # A new output file starts from the committed snapshot, so failed fetches keep the last good data.
+    seed = out if out.exists() else OUT
+    previous = json.loads(seed.read_text(encoding="utf-8")) if seed.exists() else {"institutions": []}
     old = {i["gtecId"]: i for i in previous["institutions"]}
 
     print("Institutions:")
@@ -163,8 +166,8 @@ def crawl(
                 failed += 1
                 # Keep what we had before rather than replacing it with a partial list.
                 print(f"  [{i}/{len(todo)}] {inst['name']}: FAILED ({exc}) - kept previous data")
-            _save(institutions)
+            _save(institutions, out)
         if failed:
             print(f"{failed} institution(s) incomplete - rerun with --missing to fetch only those.")
-    _save(institutions)
-    return OUT
+    _save(institutions, out)
+    return out
