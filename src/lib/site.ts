@@ -15,7 +15,7 @@ export const SUPPORT = {
   /** Support email address, e.g. "help@example.com" */
   email: "adichriz@gmail.com",
   /** Telegram username without "@" (e.g. "campuscompass_help"), or a phone number in +233... form */
-  telegram: "+233599784780",
+  telegram: "theprocode",
   /** Optional Telegram QR code image in /public, shown on the support page for scanning from a computer */
   telegramQr: "/telegram-qr.png",
   /** Usual reply window shown next to the contact options */
