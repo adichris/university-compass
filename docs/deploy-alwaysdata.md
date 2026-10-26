@@ -23,12 +23,21 @@ Enable SSH for your account in the alwaysdata admin (**Remote access > SSH**), t
 
 ```bash
 ssh <account>@ssh-<account>.alwaysdata.net
-git clone https://github.com/adichris/university-compass.git ~/campuscompass
-cd ~/campuscompass
+git clone https://github.com/adichris/university-compass.git ~/university-compass
+cd ~/university-compass
 bash scripts/deploy-alwaysdata.sh     # npm ci + build (run it again for every update)
 ```
 
-Pick Node.js 20 or newer under **Environment > Node.js** first (Next.js 16 needs >= 20.9).
+Next.js 16 needs Node.js 20.9 or newer. The Node version chosen on the site's settings page only applies to the
+running site; SSH sessions use the account default (**Environment > Node.js**), which may be older. The deploy script
+sets `NODEJS_VERSION=24` for the build, so either way the build uses Node 24.
+
+Variables starting with `NEXT_PUBLIC_` are built into the site, so put the site address in a file the build reads
+(it is git-ignored and stays on the server):
+
+```bash
+echo "NEXT_PUBLIC_SITE_URL=https://<your-domain>" > ~/university-compass/.env.production
+```
 
 > Build on the server, not on Windows: the bundle includes native binaries (for the optional SQLite driver) built for
 > the machine that ran the build.
@@ -41,8 +50,8 @@ Pick Node.js 20 or newer under **Environment > Node.js** first (Next.js 16 needs
 | --- | --- |
 | Address | `<account>.alwaysdata.net` (or your own domain) |
 | Type | Node.js |
-| Command | `node /home/<account>/campuscompass/scripts/start-alwaysdata.mjs` |
-| Working directory | `/home/<account>/campuscompass` |
+| Command | `node /home/<account>/university-compass/scripts/start-alwaysdata.mjs` |
+| Working directory | `/home/<account>/university-compass` |
 | Environment | see below |
 
 Environment variables (one per line):
@@ -63,7 +72,7 @@ alwaysdata allows 50 per user.
 
 ```bash
 ssh <account>@ssh-<account>.alwaysdata.net
-cd ~/campuscompass && bash scripts/deploy-alwaysdata.sh
+cd ~/university-compass && bash scripts/deploy-alwaysdata.sh
 ```
 
 Then restart the site in the admin. University and scholarship data is compiled in at build time, so merging a
@@ -74,14 +83,15 @@ weekly data-refresh PR on GitHub needs a deploy to go live.
 alwaysdata's own backups cover your databases (check the retention on your plan). For an extra copy over SSH:
 
 ```bash
-pg_dump -h postgresql-<account>.alwaysdata.net -U <db_user> <database> > ~/campuscompass-$(date +%F).sql
+pg_dump -h postgresql-<account>.alwaysdata.net -U <db_user> <database> > ~/university-compass-$(date +%F).sql
 ```
 
 ## If the build runs out of memory
 
-`next build` can need more memory than the smallest plans allow. If the build is killed, build on a Linux machine
+The deploy script builds with a single page-generation worker (`NEXT_BUILD_CPUS=1`), because the default of one
+worker per CPU gets killed (`SIGKILL`) on shared hosting. If it is still killed, build on a Linux machine
 instead (for example a GitHub Actions `ubuntu-latest` job running `npm ci && npm run build:standalone`), then
-copy the project folder, including `.next/standalone`, to `~/campuscompass` with `rsync` over SSH.
+copy the project folder, including `.next/standalone`, to `~/university-compass` with `rsync` over SSH.
 
 ## Using a SQLite file instead
 
