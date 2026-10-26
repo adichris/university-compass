@@ -50,6 +50,11 @@ export default function AboutPage() {
             Without an account, everything stays in your browser. With an optional account, your saved data is stored securely so it
             syncs across devices. Outcome reports are anonymous. We comply with Ghana&apos;s Data Protection Act, 2012 (Act 843).
           </p>
+          <p className="text-muted">
+            We keep simple, anonymous usage statistics (pages visited, how many checks are run, which buttons are used) to
+            improve the site. They use no cookies and store no names, grades, index numbers or IP addresses; visitors are
+            counted with a code that changes every day. If your browser sends &quot;Do Not Track&quot;, nothing is recorded.
+          </p>
         </section>
       </div>
     </div>

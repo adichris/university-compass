@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Check, Copy, HeartHandshake, LifeBuoy, Mail, Phone, Send, ShieldAlert, X } from "lucide-react";
 import { hasContact, hasDonations, SITE, SUPPORT } from "@/lib/site";
+import { track } from "@/lib/telemetry";
 
 const telegramId = SUPPORT.telegram.replace(/^@/, "").replace(/\s+/g, "");
 const telegramIsPhone = telegramId.startsWith("+");
@@ -15,13 +16,14 @@ const mailUrl = SUPPORT.email ? `mailto:${SUPPORT.email}?subject=${encodeURIComp
 // "#" must be encoded or the dialer drops it.
 const MOMO_DIAL = "tel:*170%23";
 
-function CopyButton({ value, label }: { value: string; label: string }) {
+function CopyButton({ value, label, where }: { value: string; label: string; where: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <button
       type="button"
       className="btn-ghost !py-1.5"
       onClick={async () => {
+        track("donate_click", { where: `${where}-copy` });
         await navigator.clipboard.writeText(value.replace(/\s+/g, "")).catch(() => {});
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
@@ -56,8 +58,8 @@ export function DonateCard() {
           <p className="mt-1 font-mono text-2xl font-bold tracking-wide">{number}</p>
           {name && <p className="text-sm text-muted">Name: <span className="font-semibold text-foreground">{name}</span></p>}
           <div className="mt-3 flex flex-wrap gap-2">
-            <CopyButton value={number} label="Copy number" />
-            <a href={MOMO_DIAL} className="btn-primary !py-1.5">
+            <CopyButton value={number} label="Copy number" where="page" />
+            <a href={MOMO_DIAL} onClick={() => track("donate_click", { where: "page-dial" })} className="btn-primary !py-1.5">
               <Phone size={15} /> Dial *170#
             </a>
           </div>
@@ -74,9 +76,9 @@ export function DonateCard() {
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">MoMoPay merchant ID</p>
           <p className="mt-1 font-mono text-2xl font-bold tracking-wide">{merchantId}</p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <CopyButton value={merchantId} label="Copy merchant ID" />
+            <CopyButton value={merchantId} label="Copy merchant ID" where="page" />
             {!number && (
-              <a href={MOMO_DIAL} className="btn-primary !py-1.5">
+              <a href={MOMO_DIAL} onClick={() => track("donate_click", { where: "page-dial" })} className="btn-primary !py-1.5">
                 <Phone size={15} /> Dial *170#
               </a>
             )}
@@ -111,12 +113,12 @@ export function ContactCard() {
       </div>
       <div className="grid gap-2 sm:grid-cols-2">
         {telegramUrl && (
-          <a href={telegramUrl} target="_blank" rel="noreferrer" className="btn-primary justify-start !py-3">
+          <a href={telegramUrl} target="_blank" rel="noreferrer" onClick={() => track("support_click", { channel: "telegram" })} className="btn-primary justify-start !py-3">
             <Send size={18} /> Chat on Telegram <span className="ml-auto font-normal opacity-80">{telegramLabel}</span>
           </a>
         )}
         {mailUrl && (
-          <a href={mailUrl} className="btn-ghost justify-start !py-3">
+          <a href={mailUrl} onClick={() => track("support_click", { channel: "email" })} className="btn-ghost justify-start !py-3">
             <Mail size={18} /> Email us <span className="ml-auto truncate font-normal text-muted">{SUPPORT.email}</span>
           </a>
         )}
@@ -144,12 +146,12 @@ export function HelpButton() {
         <div className="card w-64 space-y-2 !p-3 shadow-lg" role="dialog" aria-label="Help and support">
           <p className="px-1 text-sm font-semibold">How can we help?</p>
           {telegramUrl && (
-            <a href={telegramUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-surface-2">
+            <a href={telegramUrl} target="_blank" rel="noreferrer" onClick={() => track("support_click", { channel: "telegram" })} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-surface-2">
               <Send size={16} className="text-brand" /> Telegram support
             </a>
           )}
           {mailUrl && (
-            <a href={mailUrl} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-surface-2">
+            <a href={mailUrl} onClick={() => track("support_click", { channel: "email" })} className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm hover:bg-surface-2">
               <Mail size={16} className="text-brand" /> Email support
             </a>
           )}
@@ -201,6 +203,7 @@ export function DonationPrompt({ active }: { active: boolean }) {
     const onScroll = () => {
       if (window.scrollY >= PROMPT_SCROLL_PX && Date.now() - since >= PROMPT_MIN_SECONDS * 1000) {
         setOpen(true);
+        track("donate_prompt_shown");
         window.removeEventListener("scroll", onScroll);
       }
     };
@@ -216,6 +219,7 @@ export function DonationPrompt({ active }: { active: boolean }) {
   }, [open]);
 
   function close() {
+    track("donate_prompt_closed");
     setOpen(false);
     try {
       window.localStorage.setItem(PROMPT_KEY, String(Date.now()));
@@ -257,8 +261,8 @@ export function DonationPrompt({ active }: { active: boolean }) {
               {name && <p className="text-xs text-muted">MTN MoMo · {name}</p>}
             </div>
             <div className="flex gap-2">
-              <CopyButton value={number} label="Copy" />
-              <a href={MOMO_DIAL} className="btn-primary !py-1.5">
+              <CopyButton value={number} label="Copy" where="popup" />
+              <a href={MOMO_DIAL} onClick={() => track("donate_click", { where: "popup-dial" })} className="btn-primary !py-1.5">
                 <Phone size={15} /> *170#
               </a>
             </div>

@@ -8,6 +8,7 @@ import { downloadText, icsEvent } from "@/lib/ics";
 import { CLASS_LABELS, matchScholarship, nextDeadline, type ScholarshipProfile } from "@/lib/postgrad";
 import { KEYS } from "@/lib/store";
 import type { DegreeClass, Field } from "@/lib/types";
+import { track } from "@/lib/telemetry";
 
 const DESTINATIONS = ["Ghana", "United Kingdom", "United States", "Germany", "Europe", "China", "Japan", "Australia", "Africa"];
 
@@ -99,7 +100,7 @@ export function ScholarshipsClient() {
               <button
                 className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted hover:bg-surface-2 disabled:text-brand"
                 disabled={tracker.has(s.id)}
-                onClick={() => tracker.add({ kind: "scholarship", refId: s.id, title: s.name, institution: s.provider, deadline: nextDeadline(s.deadlineMonth)?.toISOString().slice(0, 10) })}
+                onClick={() => (track("add_to_plan", { kind: "scholarship" }), tracker.add({ kind: "scholarship", refId: s.id, title: s.name, institution: s.provider, deadline: nextDeadline(s.deadlineMonth)?.toISOString().slice(0, 10) }))}
               >
                 <ListPlus size={15} /> {tracker.has(s.id) ? "In my plan" : "Add to plan"}
               </button>

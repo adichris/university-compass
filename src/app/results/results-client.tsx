@@ -10,6 +10,7 @@ import { WASSCE_GRADES } from "@/lib/grades";
 import { parseResultText } from "@/lib/parse-results";
 import { KEYS, usePersisted } from "@/lib/store";
 import type { ExamType, Sitting } from "@/lib/types";
+import { track } from "@/lib/telemetry";
 
 export const WAEC_PORTAL = "https://ghana.waecdirect.org";
 const THIS_YEAR = new Date().getFullYear();
@@ -72,6 +73,7 @@ function GuidedCheckForm({ saved, setSaved }: { saved: Remembered | null; setSav
   const open = () => {
     if (remember) setSaved({ exam, year, index });
     else if (saved) setSaved(null);
+    track("waec_portal_open");
     window.open(WAEC_PORTAL, "_blank", "noopener");
   };
 
@@ -220,10 +222,11 @@ function ImportResults() {
     }
   };
 
-  const save = (mode: "add" | "replace") => {
+  const save = (saveMode: "add" | "replace") => {
+    track("result_import", { method: mode });
     if (!grades) return;
     const sitting: Sitting = { ...newSitting(exam), year, grades };
-    setSittings((prev) => (mode === "replace" ? [sitting] : [...prev, sitting]));
+    setSittings((prev) => (saveMode === "replace" ? [sitting] : [...prev, sitting]));
     router.push("/check");
   };
 
@@ -325,6 +328,7 @@ function ReleaseWatch() {
     setStatus("busy");
     const res = await fetch("/api/alerts", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, topics }) });
     const data = await res.json().catch(() => ({}));
+    if (res.ok) track("alert_signup");
     setStatus(res.ok ? "done" : (data.error ?? "Something went wrong"));
   };
 

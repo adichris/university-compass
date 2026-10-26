@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChevronDown, ListPlus, Plus, Search, Share2, Users, X } from "lucide-react";
 import { cleanSittings, GradeEditor, newSitting } from "@/components/grade-editor";
-import { CHANCE_META, ChanceBadge, SaveButton, useOutcomeStats, useSaved, useTracker } from "@/components/ui";
+import { CHANCE_META, ChanceBadge, Pagination, SaveButton, useOutcomeStats, useSaved, useTracker } from "@/components/ui";
 import { DonationPrompt } from "@/components/support";
 import { FIELD_LABELS, programmes, REGIONS, TYPE_LABELS, TYPE_ORDER, universityBySlug } from "@/lib/data";
 import { CHANCE_ORDER, checkProgramme, defaultMaxAggregate, generalAggregate } from "@/lib/eligibility";
@@ -13,6 +13,8 @@ import { EXAM_LABELS } from "@/lib/grades";
 import { KEYS, usePersisted } from "@/lib/store";
 import type { Chance, EligibilityResult, Field, InstitutionType, Sitting } from "@/lib/types";
 import { SITE_TITLE } from "@/lib/site";
+import { track } from "@/lib/telemetry";
+import { aggregateBand } from "@/lib/telemetry-events";
 
 interface Filters {
   q: string;
@@ -22,6 +24,8 @@ interface Filters {
   level: "all" | "degree" | "hnd" | "diploma";
   chance: Chance | "possible" | "all";
 }
+
+const PAGE_SIZE = 20;
 
 const POSSIBLE: Chance[] = ["safe", "competitive", "reach", "eligible"];
 
@@ -76,6 +80,18 @@ export function CheckClient() {
       .sort((a, b) => CHANCE_ORDER.indexOf(a.chance) - CHANCE_ORDER.indexOf(b.chance) || (a.programme.cutoff ?? 99) - (b.programme.cutoff ?? 99));
   }, [results, filters]);
 
+  // The page resets to 1 whenever the result set changes (new grades or filters).
+  const resultsKey = useMemo(() => JSON.stringify([filters, clean]), [filters, clean]);
+  const [pageState, setPageState] = useState({ key: "", page: 1 });
+  const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const page = pageState.key === resultsKey ? Math.min(pageState.page, pageCount) : 1;
+  const pageItems = visible.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const listTop = useRef<HTMLParagraphElement>(null);
+  const goToPage = (p: number) => {
+    setPageState({ key: resultsKey, page: p });
+    listTop.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const update = (s: Sitting) => setSittings(list.map((x) => (x.id === s.id ? s : x)));
   const addSitting = () => {
     setSittings([...list, newSitting("novdec")]);
@@ -86,7 +102,16 @@ export function CheckClient() {
     setActiveTab(0);
   };
 
+  // One "check_results" statistic per visit, once results first appear (not on every grade edit).
+  const reportedCheck = useRef(false);
+  useEffect(() => {
+    if (!filled || results.length === 0 || reportedCheck.current) return;
+    reportedCheck.current = true;
+    track("check_results", { exam: clean[0]?.exam ?? "wassce", aggregate_band: aggregateBand(aggregate), sittings: clean.length });
+  }, [filled, results.length, clean, aggregate]);
+
   const share = async () => {
+    track("share");
     const possible = counts.safe + counts.competitive + counts.reach + counts.eligible;
     const text = `My WASSCE aggregate is ${aggregate ?? "-"} and I qualify for ${possible} university programmes in Ghana. Check yours free:`;
     const url = window.location.origin + "/check";
@@ -178,23 +203,29 @@ export function CheckClient() {
 
             <Toolbar filters={filters} setFilters={setFilters} />
 
-            <p className="text-sm text-muted">
-              Showing {visible.length} programme{visible.length === 1 ? "" : "s"}
+            <p ref={listTop} className="scroll-mt-24 text-sm text-muted">
+              {visible.length > PAGE_SIZE
+                ? `Showing ${(page - 1) * PAGE_SIZE + 1}-${Math.min(page * PAGE_SIZE, visible.length)} of ${visible.length} programmes`
+                : `Showing ${visible.length} programme${visible.length === 1 ? "" : "s"}`}
               {filters.chance === "possible" ? " you have a real chance at" : ""}.
             </p>
 
             <div className="space-y-3">
-              {visible.map((r) => (
+              {pageItems.map((r) => (
                 <ResultCard
                   key={r.programme.id}
                   r={r}
                   crowd={stats[r.programme.id]}
                   saved={saved.has(r.programme.id)}
-                  onSave={() => saved.toggle(r.programme.id)}
+                  onSave={() => {
+                    if (!saved.has(r.programme.id)) track("save_programme");
+                    saved.toggle(r.programme.id);
+                  }}
                   tracked={tracker.has(r.programme.id)}
-                  onTrack={() =>
-                    tracker.add({ kind: "programme", refId: r.programme.id, title: r.programme.name, institution: universityBySlug.get(r.programme.university)!.short })
-                  }
+                  onTrack={() => {
+                    track("add_to_plan", { kind: "programme" });
+                    tracker.add({ kind: "programme", refId: r.programme.id, title: r.programme.name, institution: universityBySlug.get(r.programme.university)!.short });
+                  }}
                 />
               ))}
               {visible.length === 0 && (
@@ -206,6 +237,8 @@ export function CheckClient() {
                 </div>
               )}
             </div>
+
+            <Pagination page={page} pageCount={pageCount} onPage={goToPage} />
           </>
         )}
 

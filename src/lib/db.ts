@@ -33,6 +33,10 @@ const SCHEMA = {
       year INTEGER NOT NULL, admitted INTEGER NOT NULL, reporter_hash TEXT, created_at INTEGER NOT NULL)`,
     `CREATE INDEX IF NOT EXISTS outcomes_programme ON outcomes(programme_id)`,
     `CREATE TABLE IF NOT EXISTS alerts (email TEXT PRIMARY KEY, topics TEXT NOT NULL, created_at INTEGER NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, path TEXT, day TEXT NOT NULL,
+      visitor TEXT NOT NULL, props TEXT, created_at INTEGER NOT NULL)`,
+    `CREATE INDEX IF NOT EXISTS events_day ON events(day, name)`,
   ],
   postgres: [
     `CREATE TABLE IF NOT EXISTS users (
@@ -49,6 +53,10 @@ const SCHEMA = {
       year INTEGER NOT NULL, admitted INTEGER NOT NULL, reporter_hash TEXT, created_at BIGINT NOT NULL)`,
     `CREATE INDEX IF NOT EXISTS outcomes_programme ON outcomes(programme_id)`,
     `CREATE TABLE IF NOT EXISTS alerts (email TEXT PRIMARY KEY, topics TEXT NOT NULL, created_at BIGINT NOT NULL)`,
+    `CREATE TABLE IF NOT EXISTS events (
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name TEXT NOT NULL, path TEXT, day TEXT NOT NULL,
+      visitor TEXT NOT NULL, props TEXT, created_at BIGINT NOT NULL)`,
+    `CREATE INDEX IF NOT EXISTS events_day ON events(day, name)`,
   ],
 };
 

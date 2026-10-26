@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { programmes, universities, universityBySlug } from "@/lib/data";
+import { track } from "@/lib/telemetry";
 
 const THIS_YEAR = new Date().getFullYear();
 
@@ -23,6 +24,7 @@ export function ContributeClient() {
       body: JSON.stringify({ programmeId, aggregate: Number(aggregate), year, admitted }),
     });
     const data = await res.json().catch(() => ({}));
+    if (res.ok) track("outcome_reported");
     setStatus(res.ok ? "done" : (data.error ?? "Something went wrong"));
   };
 

@@ -8,6 +8,7 @@ import { FIELD_LABELS, postgradProgrammes, scholarships, universityBySlug } from
 import { CLASS_LABELS, classFromCgpa, matchPostgrad, matchScholarship, type PgStatus } from "@/lib/postgrad";
 import { KEYS, usePersisted } from "@/lib/store";
 import type { DegreeClass, Field, PostgradProfile } from "@/lib/types";
+import { track } from "@/lib/telemetry";
 
 const DEFAULT: PostgradProfile = {
   highest: "bachelor",
@@ -193,7 +194,7 @@ export function PostgradClient() {
                 <button
                   className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted hover:bg-surface-2 disabled:text-brand"
                   disabled={tracker.has(p.id)}
-                  onClick={() => tracker.add({ kind: "postgrad", refId: p.id, title: p.name, institution: uni?.short ?? p.country })}
+                  onClick={() => (track("add_to_plan", { kind: "postgrad" }), tracker.add({ kind: "postgrad", refId: p.id, title: p.name, institution: uni?.short ?? p.country }))}
                 >
                   <ListPlus size={15} /> {tracker.has(p.id) ? "In my plan" : "Add to plan"}
                 </button>

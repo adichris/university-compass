@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { disableSync, enableSync } from "@/lib/store";
+import { track } from "@/lib/telemetry";
 
 export interface User {
   id: string;
@@ -55,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(async (email: string, password: string, name: string) => {
     const { ok, data } = await post("/api/auth/register", { email, password, name });
     if (!ok) return data.error ?? "Could not create account";
+    track("signup");
     setUser(data.user);
     await enableSync();
     return null;

@@ -109,3 +109,55 @@ export function useTracker() {
   const has = (refId: string) => items.some((i) => i.refId === refId);
   return { items, setItems, add, has };
 }
+
+/** Page numbers to show: always first, last and neighbours of the current page, with gaps as null. */
+function pageList(page: number, count: number): (number | null)[] {
+  const pages = new Set([1, count, page - 1, page, page + 1].filter((p) => p >= 1 && p <= count));
+  const sorted = [...pages].sort((a, b) => a - b);
+  const out: (number | null)[] = [];
+  sorted.forEach((p, i) => {
+    if (i > 0 && p - sorted[i - 1] > 1) out.push(null);
+    out.push(p);
+  });
+  return out;
+}
+
+export function Pagination({ page, pageCount, onPage }: { page: number; pageCount: number; onPage: (p: number) => void }) {
+  if (pageCount <= 1) return null;
+  const btn = "inline-flex h-9 min-w-9 items-center justify-center rounded-lg border px-3 text-sm font-medium transition";
+  return (
+    <nav aria-label="Results pages" className="flex flex-wrap items-center justify-center gap-1.5">
+      <button
+        type="button"
+        className={`${btn} border-border bg-surface hover:bg-surface-2 disabled:opacity-40`}
+        disabled={page <= 1}
+        onClick={() => onPage(page - 1)}
+      >
+        ← Prev
+      </button>
+      {pageList(page, pageCount).map((p, i) =>
+        p === null ? (
+          <span key={`gap-${i}`} className="px-1 text-muted">…</span>
+        ) : (
+          <button
+            key={p}
+            type="button"
+            aria-current={p === page ? "page" : undefined}
+            className={`${btn} ${p === page ? "border-brand bg-brand text-white dark:text-[#0d0f1c]" : "border-border bg-surface hover:bg-surface-2"}`}
+            onClick={() => onPage(p)}
+          >
+            {p}
+          </button>
+        ),
+      )}
+      <button
+        type="button"
+        className={`${btn} border-border bg-surface hover:bg-surface-2 disabled:opacity-40`}
+        disabled={page >= pageCount}
+        onClick={() => onPage(page + 1)}
+      >
+        Next →
+      </button>
+    </nav>
+  );
+}

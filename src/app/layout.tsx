@@ -5,6 +5,7 @@ import { AuthProvider } from "@/components/auth";
 import { SiteHeader } from "@/components/site-header";
 import { ServiceWorker } from "@/components/service-worker";
 import { HelpButton } from "@/components/support";
+import { PageView } from "@/components/pageview";
 import "./globals.css";
 import { SITE, SITE_TITLE } from "@/lib/site";
 
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </footer>
         </AuthProvider>
+        <PageView />
         <HelpButton />
         <ServiceWorker />
       </body>
