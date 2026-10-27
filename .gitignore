@@ -58,3 +58,4 @@ __pycache__/
 data/local/
 .next-build/
 .next-old/
+.node_modules-old-*/

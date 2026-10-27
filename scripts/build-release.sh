@@ -23,10 +23,16 @@ unset NODE_ENV
 for v in $(env | grep -o '^__NEXT[A-Za-z0-9_]*' || true); do unset "$v"; done
 
 # A build killed for memory (SIGKILL) exits silently; say clearly what happened and what is still live.
-trap 'status=$?; echo; echo "== Build FAILED (exit $status). Nothing was swapped: the site is still running the previous build."; [ "$status" -ge 128 ] && echo "   The process was killed - usually the server ran out of memory. Try again, or deploy with the site stopped."' ERR
+trap 'status=$?; echo; echo "== Build FAILED (exit $status). Nothing was swapped: the site is still running the previous build."; { [ "$status" = 137 ] || [ "$status" = 143 ]; } && echo "   The process was killed - usually the server ran out of memory. Try again, or deploy with the site stopped."' ERR
 
 echo "== Node $(node -v), build workers: $NEXT_BUILD_CPUS, type check: $([ "$NEXT_SKIP_TYPECHECK" = 1 ] && echo skipped || echo on), heap cap: ${BUILD_MAX_HEAP_MB:-default}"
 echo "== Installing dependencies"
+# npm ci deletes node_modules itself and fails with ENOTEMPTY when a folder can't be removed (files still
+# open, or left over from an interrupted install). Renaming always works, so move it aside and delete it here.
+if [ -d node_modules ]; then
+  mv node_modules ".node_modules-old-$$"
+fi
+rm -rf .node_modules-old-* 2>/dev/null || echo "   (some old files in .node_modules-old-* are still in use; a later deploy removes them)"
 npm ci --include=dev --no-audit --no-fund
 node scripts/prepare-data.mjs
 echo "== Building"
