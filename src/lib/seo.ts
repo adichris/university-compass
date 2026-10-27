@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
 import { SITE, SITE_TITLE, SUPPORT } from "./site";
 
-const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL;
-const isLocalUrl = !configuredUrl || /^https?:\/\/(localhost|127\.0\.0\.1)([:/]|$)/.test(configuredUrl);
+/** NEXT_PUBLIC_SITE_URL as an origin, accepting a bare domain ("example.com" -> "https://example.com"); null if unusable. */
+function configuredOrigin(): string | null {
+  const value = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!value) return null;
+  try {
+    return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`).origin;
+  } catch {
+    return null;
+  }
+}
+
+const configuredUrl = configuredOrigin();
+const isLocalUrl = !configuredUrl || /^https?:\/\/(localhost|127\.0\.0\.1)(:|$)/.test(configuredUrl);
 
 /**
  * Public address of the site, used for canonical links, the sitemap and share previews. A production build
- * never uses a localhost address (e.g. a .env copied from .env.example): it falls back to SITE.url.
+ * never uses a missing, invalid or localhost address (e.g. a .env copied from .env.example): it falls back to SITE.url.
  */
-export const SITE_URL = (isLocalUrl && process.env.NODE_ENV === "production" ? SITE.url : (configuredUrl ?? "http://localhost:3000")).replace(/\/+$/, "");
+export const SITE_URL = isLocalUrl && process.env.NODE_ENV === "production" ? SITE.url : (configuredUrl ?? "http://localhost:3000");
 
 /** The default share image (app/opengraph-image.tsx). A page's own openGraph replaces the inherited one, so pages restate it. */
 export const SHARE_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: `${SITE_TITLE} - ${SITE.tagline}` };
