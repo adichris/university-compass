@@ -52,7 +52,12 @@ fi
 node scripts/prepare-data.mjs
 echo "== Building"
 rm -rf .next-build
-npx next build
+# Two processes instead of one: a single `next build` still holds the compiler's memory when it starts
+# generating pages, which is where small plans kill it. Compiling first and generating pages in a fresh
+# process lowers the peak by about a quarter.
+npx next build --experimental-build-mode compile
+echo "== Generating pages"
+npx next build --experimental-build-mode generate
 node scripts/standalone-assets.mjs
 
 echo "== Swapping in the new build"

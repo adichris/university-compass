@@ -8,11 +8,11 @@ import type { Field, Programme, University } from "@/lib/types";
 import { JsonLd } from "@/components/json-ld";
 import { breadcrumbJsonLd, pageMetadata, SITE_URL } from "@/lib/seo";
 
-// Pre-build the most visited institutions (public and technical universities). Every other institution page
-// is rendered on its first visit and then cached, which keeps the build within small-server memory while
-// visitors and search engines still get full server-rendered pages.
+// Institution pages are rendered on their first visit and then cached, which keeps the build within
+// small-server memory while visitors and search engines still get full server-rendered pages. Cache
+// Components needs at least one slug at build time to check the route, so only the first is pre-built.
 export function generateStaticParams() {
-  return universities.filter((u) => u.type === "public" || u.type === "technical").map((u) => ({ slug: u.slug }));
+  return universities.slice(0, 1).map((u) => ({ slug: u.slug }));
 }
 
 function describe(u: University, count: number): string {
