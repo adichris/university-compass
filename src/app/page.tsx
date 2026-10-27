@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Award, BookOpenCheck, Building2, ClipboardCheck, FileSearch, GraduationCap, HeartHandshake, Sparkles } from "lucide-react";
 import { postgradProgrammes, programmes, scholarships, universities, updates } from "@/lib/data";
 import { hasContact, hasDonations, SITE } from "@/lib/site";
+import { SHARE_IMAGE } from "@/lib/seo";
+import { BuyCheckerCard, DialCodePanel, DialCodeStrip } from "@/components/checkers";
 
 const FEATURES = [
   { href: "/check", icon: ClipboardCheck, title: "Admission checker", body: "WASSCE, NOVDEC & SSSCE grades → every programme you qualify for, sorted by your chances." },
@@ -12,42 +15,67 @@ const FEATURES = [
   { href: "/career", icon: Sparkles, title: "Career quiz", body: "Not sure what to study? Find fields that fit your interests in 2 minutes." },
 ];
 
+export const metadata: Metadata = {
+  title: { absolute: `${SITE.name}${SITE.suffix} - WASSCE admission checker, results & scholarships in Ghana` },
+  description:
+    "Free for every student: enter your WASSCE or NOVDEC grades and instantly see which Ghanaian universities and programmes you qualify for. Check results, buy a checker, find masters, PhD and scholarships.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: `${SITE.name}${SITE.suffix} - WASSCE admission checker, results & scholarships`,
+    description: "Enter your WASSCE or NOVDEC grades and instantly see which Ghanaian universities and programmes you qualify for. Free.",
+    siteName: `${SITE.name}${SITE.suffix}`,
+    locale: "en_GH",
+    type: "website",
+    images: [SHARE_IMAGE],
+  },
+};
+
 export default function Home() {
   const results = updates.filter((u) => u.kind === "results");
   return (
     <div className="space-y-16">
       <section className="relative overflow-hidden rounded-3xl bg-brand px-6 py-14 text-white sm:px-12 dark:bg-brand-soft">
         <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-accent/25 blur-3xl" aria-hidden />
-        <div className="relative max-w-2xl">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
-            <BookOpenCheck size={14} /> 100% free · No account needed
-          </p>
-          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            Check your university admission chances in Ghana
-          </h1>
-          <p className="mt-4 text-lg text-white/85 dark:text-foreground/80">
-            Enter your WASSCE or NOVDEC grades and instantly see which universities and programmes you qualify for.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/check" className="btn bg-accent px-6 py-3 text-base text-[#1d1600] hover:brightness-95">
-              Check my chances <ArrowRight size={18} />
-            </Link>
-            <Link href="/results" className="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10 dark:text-foreground">
-              Check WASSCE results
-            </Link>
+        <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="max-w-2xl">
+            <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
+              <BookOpenCheck size={14} /> 100% free · No account needed
+            </p>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+              Check your university admission chances in Ghana
+            </h1>
+            <p className="mt-4 text-lg text-white/85 dark:text-foreground/80">
+              Enter your WASSCE or NOVDEC grades and instantly see which universities and programmes you qualify for.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/check" className="btn bg-accent px-6 py-3 text-base text-[#1d1600] hover:brightness-95">
+                Check my chances <ArrowRight size={18} />
+              </Link>
+              <Link href="/results" className="btn border border-white/30 px-6 py-3 text-base text-white hover:bg-white/10 dark:text-foreground">
+                Check WASSCE results
+              </Link>
+            </div>
+            {/* Phones and tablets: compact strip here. Desktop: the panel on the right. */}
+            <div className="lg:hidden">
+              <DialCodeStrip />
+            </div>
+            <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 text-sm">
+              {[
+                [universities.length, "institutions"],
+                [programmes.length, "programmes"],
+                [scholarships.length + postgradProgrammes.length, "PG & scholarships"],
+              ].map(([n, l]) => (
+                <div key={l}>
+                  <dt className="text-3xl font-bold">{n}</dt>
+                  <dd className="text-white/75 dark:text-muted">{l}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 text-sm">
-            {[
-              [universities.length, "institutions"],
-              [programmes.length, "programmes"],
-              [scholarships.length + postgradProgrammes.length, "PG & scholarships"],
-            ].map(([n, l]) => (
-              <div key={l}>
-                <dt className="text-3xl font-bold">{n}</dt>
-                <dd className="text-white/75 dark:text-muted">{l}</dd>
-              </div>
-            ))}
-          </dl>
+          <div className="hidden lg:block">
+            <DialCodePanel />
+          </div>
         </div>
       </section>
 
@@ -63,6 +91,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <BuyCheckerCard compact />
 
       <section className="grid gap-4 lg:grid-cols-2">
         <div className="card">

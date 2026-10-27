@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { ContactCard, DonateCard } from "@/components/support";
 import { PageHeader } from "@/components/ui";
 import { hasContact, hasDonations, SITE } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Support & donate",
-  description: `Get help using ${SITE.name}, or support it with an MTN MoMo donation.`,
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/support",
+  title: "Help & support - donate with MTN MoMo",
+  description:
+    "Get help using CampusCompass.gh on Telegram or email, or support the free service with an MTN MoMo donation.",
+});
 
 export default function SupportPage() {
   return (

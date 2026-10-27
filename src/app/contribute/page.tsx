@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { PageHeader } from "@/components/ui";
 import { ContributeClient } from "./contribute-client";
 
-export const metadata: Metadata = { title: "Share your admission outcome" };
+export const metadata: Metadata = pageMetadata({
+  path: "/contribute",
+  title: "Share your university admission outcome",
+  description:
+    "Tell other Ghanaian students the aggregate you were admitted with, anonymously, so everyone gets more accurate cut-offs.",
+});
 
 export default function ContributePage() {
   return (

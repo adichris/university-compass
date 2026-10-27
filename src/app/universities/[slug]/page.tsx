@@ -4,15 +4,60 @@ import { notFound } from "next/navigation";
 import { ExternalLink, MapPin } from "lucide-react";
 import { FIELD_LABELS, programmes, TYPE_LABELS, universities, universityBySlug } from "@/lib/data";
 import { defaultMaxAggregate } from "@/lib/eligibility";
-import type { Field } from "@/lib/types";
+import type { Field, Programme, University } from "@/lib/types";
+import { JsonLd } from "@/components/json-ld";
+import { breadcrumbJsonLd, pageMetadata, SITE_URL } from "@/lib/seo";
 
 export function generateStaticParams() {
   return universities.map((u) => ({ slug: u.slug }));
 }
 
+function describe(u: University, count: number): string {
+  const place = [u.city, u.region !== "Other" ? `${u.region} Region` : ""].filter(Boolean).join(", ");
+  return `${u.name}${place ? ` in ${place}` : ""}: ${count} accredited programmes with entry requirements, cut-off points and admission links. Check if your WASSCE grades qualify.`;
+}
+
 export async function generateMetadata({ params }: PageProps<"/universities/[slug]">): Promise<Metadata> {
   const u = universityBySlug.get((await params).slug);
-  return u ? { title: `${u.name} (${u.short}) - programmes & cut-offs`, description: u.description } : {};
+  if (!u) return {};
+  const count = programmes.filter((p) => p.university === u.slug).length;
+  return pageMetadata({
+    path: `/universities/${u.slug}`,
+    title: `${u.name} (${u.short}) - programmes, cut-offs & requirements`,
+    description: describe(u, count),
+  });
+}
+
+const CREDENTIAL: Record<Programme["level"], string> = { degree: "Bachelor's degree", hnd: "Higher National Diploma", diploma: "Diploma" };
+
+function universityJsonLd(u: University, list: Programme[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollegeOrUniversity",
+    name: u.name,
+    alternateName: u.short,
+    url: u.website || `${SITE_URL}/universities/${u.slug}`,
+    description: describe(u, list.length),
+    address: {
+      "@type": "PostalAddress",
+      ...(u.address ? { streetAddress: u.address } : {}),
+      addressLocality: u.city,
+      ...(u.region !== "Other" ? { addressRegion: u.region } : {}),
+      addressCountry: "GH",
+    },
+    ...(u.gtecUrl ? { sameAs: [u.gtecUrl] } : {}),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `Programmes at ${u.name}`,
+      itemListElement: list.slice(0, 100).map((p) => ({
+        "@type": "EducationalOccupationalProgram",
+        name: p.name,
+        educationalCredentialAwarded: CREDENTIAL[p.level],
+        ...(p.requirementsKnown ? { timeToComplete: `P${p.years}Y` } : {}),
+        provider: { "@type": "CollegeOrUniversity", name: u.name },
+      })),
+    },
+  };
 }
 
 export default async function UniversityPage({ params }: PageProps<"/universities/[slug]">) {
@@ -25,6 +70,16 @@ export default async function UniversityPage({ params }: PageProps<"/universitie
 
   return (
     <div className="space-y-8">
+      <JsonLd
+        data={[
+          universityJsonLd(u, list),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Universities & colleges", path: "/universities" },
+            { name: u.name, path: `/universities/${u.slug}` },
+          ]),
+        ]}
+      />
       <div>
         <Link href="/universities" className="text-sm text-muted hover:text-brand">← All universities & colleges</Link>
         <div className="mt-3 flex flex-wrap items-center gap-3">

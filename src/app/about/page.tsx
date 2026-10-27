@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui";
 import { SITE_TITLE } from "@/lib/site";
 
-export const metadata: Metadata = { title: "About & data sources" };
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
+  title: "About CampusCompass.gh - how we calculate your chances",
+  description:
+    "How CampusCompass.gh calculates WASSCE aggregates and admission chances, where the university data comes from, and how we protect your privacy.",
+});
 
 export default function AboutPage() {
   return (

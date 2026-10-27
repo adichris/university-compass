@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui";
 import { AccountClient } from "./account-client";
 
-export const metadata: Metadata = { title: "Account (optional)" };
+export const metadata: Metadata = { title: "Account (optional)", robots: { index: false, follow: true } };
 
 export default function AccountPage() {
   return (

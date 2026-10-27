@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { PageHeader } from "@/components/ui";
 import { CheckClient } from "./check-client";
 
-export const metadata: Metadata = {
-  title: "Admission checker",
-  description: "Enter your WASSCE, NOVDEC or SSSCE grades and see which Ghanaian university programmes you qualify for.",
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/check",
+  title: "WASSCE admission checker - see which universities you qualify for",
+  description:
+    "Free WASSCE, NOVDEC and SSSCE aggregate calculator. Enter your grades to see every Ghanaian university, technical university and college programme you qualify for, with cut-offs and recommendations.",
+});
 
 export default function CheckPage() {
   return (

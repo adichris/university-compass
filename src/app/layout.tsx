@@ -8,6 +8,8 @@ import { HelpButton } from "@/components/support";
 import { PageView } from "@/components/pageview";
 import "./globals.css";
 import { SITE, SITE_TITLE } from "@/lib/site";
+import { JsonLd } from "@/components/json-ld";
+import { SITE_URL, siteJsonLd } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: `${SITE_TITLE} - ${SITE.tagline}`,
     template: `%s · ${SITE_TITLE}`,
@@ -27,6 +30,14 @@ export const metadata: Metadata = {
   description:
     "Free tool: enter your WASSCE, NOVDEC or SSSCE grades and instantly see which Ghanaian universities and programmes you qualify for. Masters, PhD and scholarships too.",
   applicationName: SITE_TITLE,
+  keywords: [
+    "WASSCE aggregate calculator", "university admission Ghana", "cut-off points", "NOVDEC", "WASSCE results checker",
+    "BECE results checker", "KNUST", "University of Ghana", "UCC", "nursing training colleges", "colleges of education",
+    "scholarships Ghana", "masters in Ghana",
+  ],
+  openGraph: { siteName: SITE_TITLE, locale: "en_GH", type: "website" },
+  twitter: { card: "summary_large_image" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
@@ -38,7 +49,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en-GH" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <AuthProvider>
           <SiteHeader />
@@ -57,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </div>
           </footer>
         </AuthProvider>
+        <JsonLd data={siteJsonLd()} />
         <PageView />
         <HelpButton />
         <ServiceWorker />

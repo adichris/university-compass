@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/ui";
 import { PlanClient } from "./plan-client";
 
-export const metadata: Metadata = { title: "My admission plan" };
+export const metadata: Metadata = { title: "My admission plan", robots: { index: false, follow: true } };
 
 export default function PlanPage() {
   return (
