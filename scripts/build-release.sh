@@ -13,6 +13,9 @@ export NEXT_DIST_DIR=.next-build
 # Skip the build's TypeScript step: it is the most memory-hungry part and gets the build killed on small
 # plans. GitHub runs the type check on every push (.github/workflows/ci.yml). NEXT_SKIP_TYPECHECK=0 restores it.
 export NEXT_SKIP_TYPECHECK="${NEXT_SKIP_TYPECHECK:-1}"
+# Optional heap cap in MB (e.g. BUILD_MAX_HEAP_MB=512) makes Node free memory sooner instead of growing until
+# the host kills it. Unset = Node's default.
+if [ -n "${BUILD_MAX_HEAP_MB:-}" ]; then export NODE_OPTIONS="--max-old-space-size=${BUILD_MAX_HEAP_MB} ${NODE_OPTIONS:-}"; fi
 # Dashboard jobs inherit the running site's environment: NODE_ENV=production (the build needs dev
 # dependencies) and __NEXT_* variables holding the live server's config (which would make `next build`
 # ignore next.config.ts and wipe the live .next folder). Clear them.
@@ -22,7 +25,7 @@ for v in $(env | grep -o '^__NEXT[A-Za-z0-9_]*' || true); do unset "$v"; done
 # A build killed for memory (SIGKILL) exits silently; say clearly what happened and what is still live.
 trap 'status=$?; echo; echo "== Build FAILED (exit $status). Nothing was swapped: the site is still running the previous build."; [ "$status" -ge 128 ] && echo "   The process was killed - usually the server ran out of memory. Try again, or deploy with the site stopped."' ERR
 
-echo "== Node $(node -v), build workers: $NEXT_BUILD_CPUS, type check: $([ "$NEXT_SKIP_TYPECHECK" = 1 ] && echo skipped || echo on)"
+echo "== Node $(node -v), build workers: $NEXT_BUILD_CPUS, type check: $([ "$NEXT_SKIP_TYPECHECK" = 1 ] && echo skipped || echo on), heap cap: ${BUILD_MAX_HEAP_MB:-default}"
 echo "== Installing dependencies"
 npm ci --include=dev --no-audit --no-fund
 node scripts/prepare-data.mjs

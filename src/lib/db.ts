@@ -4,7 +4,7 @@ import type { Pool } from "pg";
 
 // DATABASE_URL picks the database:
 //   postgresql://user:pass@host:5432/db         - PostgreSQL (alwaysdata, any managed Postgres)
-//   file:/home/<account>/data/campuscompass.db  - SQLite file (VPS)
+//   file:/home/<account>/data/university-compass.db  - SQLite file (VPS)
 //   libsql://...  (+ TURSO_AUTH_TOKEN)          - Turso (Vercel / serverless)
 // Unset: a local SQLite file for development. TURSO_DATABASE_URL is still accepted for older configs.
 const url = process.env.DATABASE_URL ?? process.env.TURSO_DATABASE_URL ?? "file:unichecker.db";

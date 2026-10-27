@@ -6,9 +6,9 @@ import { SITE_TITLE } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   path: "/about",
-  title: "About CampusCompass.gh - how we calculate your chances",
+  title: "About UniversityCompass.gh - how we calculate your chances",
   description:
-    "How CampusCompass.gh calculates WASSCE aggregates and admission chances, where the university data comes from, and how we protect your privacy.",
+    "How UniversityCompass.gh calculates WASSCE aggregates and admission chances, where the university data comes from, and how we protect your privacy.",
 });
 
 export default function AboutPage() {

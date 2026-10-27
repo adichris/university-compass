@@ -6,7 +6,7 @@ It is built in "standalone" mode, a self-contained server of about 40 MB.
 
 ## 1. Create the PostgreSQL database
 
-In the admin, go to **Databases > PostgreSQL** and create a database (e.g. `<account>_campuscompass`) and a user with
+In the admin, go to **Databases > PostgreSQL** and create a database (e.g. `<account>_university_compass`) and a user with
 **all privileges** on it. Note the user's password. The connection details are:
 
 | | |
@@ -134,16 +134,24 @@ pg_dump -h postgresql-<account>.alwaysdata.net -U <db_user> <database> > ~/unive
 ## If the build runs out of memory
 
 The deploy script builds with a single page-generation worker (`NEXT_BUILD_CPUS=1`), because the default of one
-worker per CPU gets killed (`SIGKILL`) on shared hosting. If it is still killed, build on a Linux machine
-instead (for example a GitHub Actions `ubuntu-latest` job running `npm ci && npm run build:standalone`), then
-copy the project folder, including `.next/standalone`, to `~/university-compass` with `rsync` over SSH.
+worker per CPU gets killed (`SIGKILL`) on shared hosting. It also pre-builds only the public and technical
+university pages; the other institution pages are rendered on their first visit and then cached.
+
+If the log still ends with `Killed` (exit 137), try these in order:
+
+1. Stop the site in the alwaysdata dashboard (**Web > Sites > Stop**) while it builds, because the running site
+   counts against the same memory limit. Start it again after the build.
+2. Cap the build's heap: `BUILD_MAX_HEAP_MB=512 bash scripts/deploy-alwaysdata.sh`.
+3. Build on a Linux machine instead (for example a GitHub Actions `ubuntu-latest` job running
+   `npm ci && npm run build:standalone`), then copy the project folder, including `.next/standalone`, to
+   `~/university-compass` with `rsync` over SSH.
 
 ## Using a SQLite file instead
 
 To skip PostgreSQL, point `DATABASE_URL` at a file outside the code folder (so deploys never touch it):
 
 ```
-DATABASE_URL=file:/home/<account>/data/campuscompass.db
+DATABASE_URL=file:/home/<account>/data/university-compass.db
 ```
 
 Create the folder first with `mkdir -p ~/data`. The same tables are created automatically.

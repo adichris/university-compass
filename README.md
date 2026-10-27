@@ -1,4 +1,4 @@
-# CampusCompass.gh
+# UniversityCompass.gh
 
 A free admission guide for Ghanaian students. Enter WASSCE, NOVDEC or SSSCE grades and see every university
 programme you qualify for, sorted into **Safe / Competitive / Reach**. It also covers masters/PhD matching,
@@ -40,7 +40,7 @@ The local database is a SQLite file (`unichecker.db`) that is created automatica
 1. Create a free [Turso](https://turso.tech) database and copy its URL and token.
 2. Import the repo on [Vercel](https://vercel.com) (Hobby plan) and set:
    - `DATABASE_URL` (the `libsql://` URL), `TURSO_AUTH_TOKEN`
-   - `NEXT_PUBLIC_SITE_URL` (e.g. `https://campuscompass.gh`)
+   - `NEXT_PUBLIC_SITE_URL` (e.g. `https://university-compass.digitalquotienttechnologies.com`)
 3. The weekly data refresh runs on GitHub Actions (free for public repos).
 
 `vercel.json` defines a single public `app` service (the Next.js site, including its `/api/*` routes). The scraper

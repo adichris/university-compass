@@ -1,9 +1,9 @@
 /** Brand settings - change the name here and it updates everywhere. */
 export const SITE = {
-  name: "CampusCompass",
+  name: "UniversityCompass",
   suffix: ".gh",
-  tagline: "Find your way to the right university in Ghana",
-  domain: "campuscompass.gh",
+  tagline: "Find your way to the right university or college in Ghana",
+  domain: "universitycompass.gh",
 };
 
 export const SITE_TITLE = `${SITE.name}${SITE.suffix}`;
@@ -14,7 +14,7 @@ export const SITE_TITLE = `${SITE.name}${SITE.suffix}`;
 export const SUPPORT = {
   /** Support email address, e.g. "help@example.com" */
   email: "adichriz@gmail.com",
-  /** Telegram username without "@" (e.g. "campuscompass_help"), or a phone number in +233... form */
+  /** Telegram username without "@" (e.g. "universitycompass_help"), or a phone number in +233... form */
   telegram: "theprocode",
   /** Optional Telegram QR code image in /public, shown on the support page for scanning from a computer */
   telegramQr: "/telegram-qr.png",

@@ -8,7 +8,7 @@ export const metadata: Metadata = pageMetadata({
   path: "/support",
   title: "Help & support - donate with MTN MoMo",
   description:
-    "Get help using CampusCompass.gh on Telegram or email, or support the free service with an MTN MoMo donation.",
+    "Get help using UniversityCompass.gh on Telegram or email, or support the free service with an MTN MoMo donation.",
 });
 
 export default function SupportPage() {

@@ -7,7 +7,7 @@
 #   scholarship  - a scholarship page; we extract deadline dates (needs `scholarship` id)
 #   watch        - just alert when the page changes (e.g. WAEC news, admission notices)
 
-user_agent: "CampusCompassBot/1.0 (+https://campuscompass.gh/about; free student admission guide)"
+user_agent: "UniversityCompassBot/1.0 (+https://university-compass.digitalquotienttechnologies.com/about; free student admission guide)"
 delay_seconds: 5
 
 sources:
