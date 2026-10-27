@@ -26,14 +26,29 @@ for v in $(env | grep -o '^__NEXT[A-Za-z0-9_]*' || true); do unset "$v"; done
 trap 'status=$?; echo; echo "== Build FAILED (exit $status). Nothing was swapped: the site is still running the previous build."; { [ "$status" = 137 ] || [ "$status" = 143 ]; } && echo "   The process was killed - usually the server ran out of memory. Try again, or deploy with the site stopped."' ERR
 
 echo "== Node $(node -v), build workers: $NEXT_BUILD_CPUS, type check: $([ "$NEXT_SKIP_TYPECHECK" = 1 ] && echo skipped || echo on), heap cap: ${BUILD_MAX_HEAP_MB:-default}"
-echo "== Installing dependencies"
-# npm ci deletes node_modules itself and fails with ENOTEMPTY when a folder can't be removed (files still
-# open, or left over from an interrupted install). Renaming always works, so move it aside and delete it here.
-if [ -d node_modules ]; then
-  mv node_modules ".node_modules-old-$$"
+# A build or install left running by an earlier deploy or dashboard job holds files in node_modules and uses
+# the memory this build needs, so this one gets killed too. Stop with a clear message instead.
+others=$(pgrep -u "$(id -u)" -f 'npm (ci|install|prune)|next build|jest-worker/processChild' || true)
+if [ -n "$others" ]; then
+  echo "== Another build is still running and using memory:"
+  ps -o pid=,rss=,etime=,args= -p "$(echo $others | tr ' ' ',')" | awk '{printf "   pid %s, %d MB, running %s: ", $1, $2/1024, $3; for (i=4;i<=NF;i++) printf "%s ", $i; print ""}'
+  echo "   Stop it with: kill $(echo $others)   (then run this again)"
+  exit 1
 fi
-rm -rf .node_modules-old-* 2>/dev/null || echo "   (some old files in .node_modules-old-* are still in use; a later deploy removes them)"
-npm ci --include=dev --no-audit --no-fund
+
+echo "== Installing dependencies"
+# Reinstall only when package-lock.json changed: npm ci is a memory peak of its own on small plans.
+lock_hash=$(sha256sum package-lock.json | cut -d' ' -f1)
+if [ "$(cat node_modules/.release-lock-hash 2>/dev/null)" = "$lock_hash" ]; then
+  echo "   unchanged since the last deploy, skipping"
+else
+  # npm ci deletes node_modules itself and fails with ENOTEMPTY when a folder can't be removed. Renaming
+  # always works, so move it aside and delete it here.
+  if [ -d node_modules ]; then mv node_modules ".node_modules-old-$$"; fi
+  rm -rf .node_modules-old-* 2>/dev/null || echo "   (some files in .node_modules-old-* are still in use; a later deploy removes them)"
+  npm ci --include=dev --prefer-offline --no-audit --no-fund
+  echo "$lock_hash" > node_modules/.release-lock-hash
+fi
 node scripts/prepare-data.mjs
 echo "== Building"
 rm -rf .next-build
@@ -46,8 +61,8 @@ rm -rf .next-old
 mv .next-build .next
 rm -rf .next-old
 
-# Keep only what the running server needs to free disk space; the next build reinstalls.
-npm prune --omit=dev --no-audit --no-fund
+# Dev dependencies are kept (no npm prune) so the next deploy can skip the install; the running server only
+# uses .next/standalone, which has its own node_modules.
 date -u +%Y-%m-%dT%H:%M:%SZ > data/local/last-build.txt
 
 # The start script records the server's PID; stopping it makes alwaysdata start the new build.
