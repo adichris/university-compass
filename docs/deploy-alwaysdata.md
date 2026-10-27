@@ -136,6 +136,8 @@ pg_dump -h postgresql-<account>.alwaysdata.net -U <db_user> <database> > ~/unive
 The deploy script builds with a single page-generation worker (`NEXT_BUILD_CPUS=1`), because the default of one
 worker per CPU gets killed (`SIGKILL`) on shared hosting. It compiles and generates pages in two separate
 processes, which lowers the peak, and institution pages are rendered on their first visit and then cached.
+It also reuses the compile cache from the previous build, so a deploy compiles only what changed (the first
+build after a fresh clone, or after deleting `.next`, is a full compile and needs the most memory).
 
 If the log still ends with `Killed` (exit 137), try these in order:
 

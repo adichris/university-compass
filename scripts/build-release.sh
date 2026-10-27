@@ -51,7 +51,13 @@ else
 fi
 node scripts/prepare-data.mjs
 echo "== Building"
-rm -rf .next-build
+# Reuse Turbopack's compile cache (cache/ in the build folder) from the last build: compiling only what changed
+# needs well under half the memory of a full compile. A failed build keeps its cache in .next-build; after a
+# successful one it moved to .next with the rest of the build (the live server doesn't use it).
+mkdir -p .next-build
+find .next-build -mindepth 1 -maxdepth 1 ! -name cache -exec rm -rf {} +
+if [ ! -d .next-build/cache ] && [ -d .next/cache ]; then mv .next/cache .next-build/cache; fi
+echo "   compile cache: $([ -d .next-build/cache ] && echo "reused ($(du -sh .next-build/cache | cut -f1))" || echo "none, full compile")"
 # Two processes instead of one: a single `next build` still holds the compiler's memory when it starts
 # generating pages, which is where small plans kill it. Compiling first and generating pages in a fresh
 # process lowers the peak by about a quarter.
