@@ -132,4 +132,5 @@ export const KEYS = {
   resultCheck: "uc:result-check",
   filters: "uc:check-filters",
   career: "uc:career",
+  recField: "uc:rec-field",
 } as const;

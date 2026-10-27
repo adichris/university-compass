@@ -141,4 +141,9 @@ select {
 /* Side panel that stays in view on desktop and scrolls on its own when taller than the screen. */
 @utility sticky-panel {
   @apply lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain;
+  /* Scrolls with the wheel or touch, without a visible scrollbar. */
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
