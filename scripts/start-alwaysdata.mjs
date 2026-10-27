@@ -21,3 +21,28 @@ try {
 } catch {}
 
 createRequire(import.meta.url)(join(root, ".next", "standalone", "server.js"));
+
+// Institution pages are rendered on their first visit and then cached. After each start, visit them once
+// in the background (one at a time, so the small server stays responsive) so real visitors and search
+// engines get cached pages straight away. WARM_CACHE=0 turns this off.
+if (process.env.WARM_CACHE !== "0") setTimeout(warmCache, 5000);
+
+async function warmCache() {
+  const base = `http://127.0.0.1:${process.env.PORT || 3000}`;
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  try {
+    const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
+    const paths = [...sitemap.matchAll(/<loc>[^<]*?(\/universities\/[^<]+)<\/loc>/g)].map((m) => m[1]);
+    const started = Date.now();
+    let warmed = 0;
+    for (const path of paths) {
+      const res = await fetch(base + path).catch(() => null);
+      await res?.arrayBuffer().catch(() => {});
+      if (res?.ok) warmed++;
+      await pause(250);
+    }
+    console.log(`Cache warm-up: ${warmed}/${paths.length} institution pages in ${Math.round((Date.now() - started) / 1000)}s`);
+  } catch (err) {
+    console.warn("Cache warm-up skipped:", err instanceof Error ? err.message : err);
+  }
+}

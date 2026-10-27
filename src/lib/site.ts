@@ -4,6 +4,8 @@ export const SITE = {
   suffix: ".gh",
   tagline: "Find your way to the right university or college in Ghana",
   domain: "universitycompass.gh",
+  /** Live address, used for canonical links and the sitemap when NEXT_PUBLIC_SITE_URL isn't set for the build. */
+  url: "https://university-compass.digitalquotienttechnologies.com",
 };
 
 export const SITE_TITLE = `${SITE.name}${SITE.suffix}`;
