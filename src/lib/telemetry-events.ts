@@ -17,6 +17,7 @@ export const EVENTS = {
   donate_click: ["where"],
   support_click: ["channel"],
   waec_portal_open: [],
+  checker_click: ["channel"],
 } as const satisfies Record<string, readonly string[]>;
 
 export type EventName = keyof typeof EVENTS;
@@ -37,6 +38,7 @@ export const EVENT_LABELS: Record<EventName, string> = {
   donate_click: "Donation clicks (copy / dial)",
   support_click: "Support line clicks",
   waec_portal_open: "WAEC portal opened",
+  checker_click: "Checker purchase clicks (dial / copy / share)",
 };
 
 /** Bucket an aggregate so the exact figure is never stored. */

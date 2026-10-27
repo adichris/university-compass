@@ -32,3 +32,21 @@ export const SUPPORT = {
 
 export const hasDonations = Boolean(SUPPORT.momo.number || SUPPORT.momo.merchantId);
 export const hasContact = Boolean(SUPPORT.email || SUPPORT.telegram);
+
+/**
+ * Results checker sales through CheckResultGH Partners. Customers dial the short code, enter the vendor
+ * code and pay by MoMo in CheckResultGH's own USSD flow. Leave `ussd` empty to hide the section.
+ */
+export const CHECKERS = {
+  ussd: "*714*81#",
+  vendorCode: "7910",
+  /** Selling prices in GH₵ - keep in sync with your CheckResultGH Partners dashboard */
+  prices: { WASSCE: 29, BECE: 25 } as Record<"WASSCE" | "BECE", number>,
+  /**
+   * Optional exam logo image in /public (e.g. "/waec-logo.png"), shown on the WASSCE and BECE badges.
+   * Empty = the site's own badge icons. A trademark note is shown with the logo.
+   */
+  examLogo: "/waec_logo.webp",
+};
+
+export const hasCheckerSales = Boolean(CHECKERS.ussd && CHECKERS.vendorCode);

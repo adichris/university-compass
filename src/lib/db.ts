@@ -37,6 +37,9 @@ const SCHEMA = {
       id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, path TEXT, day TEXT NOT NULL,
       visitor TEXT NOT NULL, props TEXT, created_at INTEGER NOT NULL)`,
     `CREATE INDEX IF NOT EXISTS events_day ON events(day, name)`,
+    `CREATE TABLE IF NOT EXISTS checker_orders (
+      reference TEXT PRIMARY KEY, type TEXT NOT NULL, quantity INTEGER NOT NULL, unit_price REAL,
+      total REAL, mode TEXT NOT NULL, note TEXT, created_at INTEGER NOT NULL)`,
   ],
   postgres: [
     `CREATE TABLE IF NOT EXISTS users (
@@ -57,6 +60,9 @@ const SCHEMA = {
       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, name TEXT NOT NULL, path TEXT, day TEXT NOT NULL,
       visitor TEXT NOT NULL, props TEXT, created_at BIGINT NOT NULL)`,
     `CREATE INDEX IF NOT EXISTS events_day ON events(day, name)`,
+    `CREATE TABLE IF NOT EXISTS checker_orders (
+      reference TEXT PRIMARY KEY, type TEXT NOT NULL, quantity INTEGER NOT NULL, unit_price DOUBLE PRECISION,
+      total DOUBLE PRECISION, mode TEXT NOT NULL, note TEXT, created_at BIGINT NOT NULL)`,
   ],
 };
 

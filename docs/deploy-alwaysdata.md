@@ -60,7 +60,13 @@ Environment variables (one per line):
 DATABASE_URL=postgresql://<db_user>:<password>@postgresql-<account>.alwaysdata.net:5432/<database>
 NEXT_PUBLIC_SITE_URL=https://<account>.alwaysdata.net
 STATS_SALT=<any random text>
+CRG_KEY=<CheckResultGH key ID, crg_test_… or crg_live_…>
+CRG_SECRET=<CheckResultGH secret, crs_…>
 ```
+
+`CRG_KEY` and `CRG_SECRET` connect the admin dashboard's **Checkers** tab to your CheckResultGH Partners
+wallet. Start with a test key; switch to the live key once a test purchase works. They are only read on the
+server and are never sent to visitors.
 
 The admin dashboard password is set over SSH, not here - see "Admin dashboard" below.
 
@@ -99,6 +105,10 @@ Then sign in at `/admin` to:
 - **Institutions**: edit any institution's name, website, admissions link, fees and description; set verified
   cut-offs; hide an institution or programme. Edits are saved on the server in `data/local/overrides.json`
   (ignored by git, so `git pull` never touches them).
+- **Checkers**: sell WASSCE/BECE checkers from your CheckResultGH wallet (e.g. after a customer pays you by
+  MoMo), look up any past order and its PINs by reference, and copy a ready-made message for the customer. Live
+  orders ask for confirmation. PINs are not stored on the site. Customers can also buy on their own with the
+  short code shown on the results page (`CHECKERS` in `src/lib/site.ts`).
 - **Jobs**: run on the server in the background, with a live log:
   - *Apply changes* rebuilds the site with your edits.
   - *Refresh GTEC data* re-crawls GTEC's register into `data/local/` (30-40 minutes), then rebuilds.

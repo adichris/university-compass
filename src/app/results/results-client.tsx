@@ -7,6 +7,7 @@ import { Bell, Camera, Check, ClipboardPaste, Copy, ExternalLink, Loader2, Lock,
 import { newSitting } from "@/components/grade-editor";
 import { subjects, updates } from "@/lib/data";
 import { WASSCE_GRADES } from "@/lib/grades";
+import { BuyCheckerCard } from "@/components/checkers";
 import { parseResultText } from "@/lib/parse-results";
 import { KEYS, usePersisted } from "@/lib/store";
 import type { ExamType, Sitting } from "@/lib/types";
@@ -24,6 +25,7 @@ interface Remembered {
 export function ResultsClient() {
   return (
     <div className="space-y-10">
+      <BuyCheckerCard />
       <GuidedCheck />
       <ImportResults />
       <ReleaseWatch />
@@ -168,8 +170,9 @@ function GuidedCheckForm({ saved, setSaved }: { saved: Remembered | null; setSav
         <div className="rounded-xl border border-border p-3 text-sm">
           <p className="flex items-center gap-2 font-medium"><ShieldCheck size={16} className="text-brand" /> Where to get a results checker card</p>
           <p className="mt-1 text-muted">
-            Buy only from WAEC offices or WAEC-authorised sellers (including WAEC&apos;s official e-voucher channels). Each card can only be used a
-            few times, so keep it safe. Never pay anyone who offers to &quot;upgrade&quot; or change grades - that is fraud.
+            Buy one in seconds with the short code at the top of this page, or from WAEC offices and WAEC-authorised sellers.
+            Each card can only be used a few times, so keep it safe. Never pay anyone who offers to &quot;upgrade&quot; or
+            change grades - that is fraud.
           </p>
           <a href="https://www.waecgh.org" target="_blank" rel="noreferrer" className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-brand">
             WAEC Ghana official site <ExternalLink size={12} />

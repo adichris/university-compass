@@ -5,10 +5,12 @@ import { LogOut, RefreshCw } from "lucide-react";
 import { EVENT_LABELS, type EventName } from "@/lib/telemetry-events";
 import { InstitutionsPanel } from "./institutions-panel";
 import { JobsPanel } from "./jobs-panel";
+import { CheckersPanel } from "./checkers-panel";
 
 const TABS = [
   { id: "stats", label: "Statistics" },
   { id: "institutions", label: "Institutions" },
+  { id: "checkers", label: "Checkers" },
   { id: "jobs", label: "Jobs" },
 ] as const;
 type Tab = (typeof TABS)[number]["id"];
@@ -114,6 +116,7 @@ export function AdminClient() {
 
   if (tab === "institutions") return <div className="space-y-6">{tabBar}<InstitutionsPanel onPending={setPending} /></div>;
   if (tab === "jobs") return <div className="space-y-6">{tabBar}<JobsPanel /></div>;
+  if (tab === "checkers") return <div className="space-y-6">{tabBar}<CheckersPanel /></div>;
 
   return (
     <div className="space-y-6">
